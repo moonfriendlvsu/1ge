@@ -110,6 +110,18 @@
     color: var(--color-text);
 }
 
+[data-theme="light"] .section-title {
+    color: var(--color-text);
+    background: none;
+    -webkit-background-clip: unset;
+    -webkit-text-fill-color: var(--color-text);
+    background-clip: unset;
+}
+
+[data-theme="light"] .section-subtitle {
+    color: var(--color-text-muted);
+}
+
 /* ========================================
    Reset & Base
    ======================================== */
@@ -1783,6 +1795,8 @@ body::before {
     .steps {
         grid-template-columns: 1fr;
         gap: var(--space-16);
+        max-width: 400px;
+        margin: 0 auto;
     }
 
     .cards {
