@@ -1797,12 +1797,13 @@ body::before {
         flex-direction: column;
         align-items: center;
         gap: var(--space-10);
-        padding: 0 var(--space-4);
+        width: 100%;
     }
 
     .step {
-        max-width: 350px;
-        width: 100%;
+        max-width: 320px;
+        width: calc(100% - 32px);
+        margin: 0 auto;
     }
 
     .step-arrow {
