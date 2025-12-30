@@ -1793,15 +1793,20 @@ body::before {
     }
 
     .steps {
-        grid-template-columns: 1fr;
-        gap: var(--space-16);
-        justify-items: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: var(--space-10);
         padding: 0 var(--space-4);
     }
 
     .step {
         max-width: 350px;
         width: 100%;
+    }
+
+    .step-arrow {
+        display: none;
     }
 
     .cards {
