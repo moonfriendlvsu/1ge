@@ -396,7 +396,12 @@ document.addEventListener('DOMContentLoaded', function () {
     // ========================================
     const feedToggle = document.getElementById('donation-feed-toggle');
 
+    // Start collapsed on mobile
     if (feedToggle && donationFeed) {
+        if (window.innerWidth <= 768) {
+            donationFeed.classList.add('collapsed');
+        }
+
         feedToggle.addEventListener('click', function () {
             donationFeed.classList.toggle('collapsed');
         });
@@ -433,13 +438,13 @@ document.addEventListener('DOMContentLoaded', function () {
             <span class="donation-amount">${randomAmount}</span>
         `;
 
-        // Add to bottom of list
-        donationList.appendChild(donationItem);
+        // Add to TOP of list (new donations appear at top, push old ones down)
+        donationList.insertBefore(donationItem, donationList.firstChild);
 
-        // Remove oldest if exceeding max
+        // Remove oldest (last item) if exceeding max
         const items = donationList.querySelectorAll('.donation-item');
         if (items.length > MAX_DONATIONS) {
-            const oldest = items[0];
+            const oldest = items[items.length - 1];
             oldest.classList.add('fade-out');
             setTimeout(() => oldest.remove(), 300);
         }
