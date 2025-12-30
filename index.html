@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="kk" data-lang="kk">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="1=GE — платформа взаимопомощи. 1 тенге каждый день меняет жизни. Бірге.">
+	<meta name="theme-color" content="#10B981">
+	<title>1=GE — 1 теңге. Бірге.</title>
+	<link rel="manifest" href="manifest.json">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+	<!-- Loading Screen -->
+	<div class="loading-screen" id="loading-screen">
+		<div class="loading-logo">
+			<span class="loading-1">1</span><span class="loading-eq">=</span><span class="loading-ge">GE</span>
+		</div>
+		<div class="loading-bar">
+			<div class="loading-progress"></div>
+		</div>
+	</div>
+
+	<!-- Confetti Container -->
+	<div class="confetti-container" id="confetti-container"></div>
+
+	<!-- Grid Background -->
+	<div class="grid-bg"></div>
+
+	<!-- Cursor Glow -->
+	<div class="cursor-glow" id="cursor-glow"></div>
+
+	<!-- Floating Action Button -->
+	<a href="#join" class="fab" id="fab">
+		<span class="fab-icon">❤️</span>
+		<span class="fab-text" data-kk="Көмектесу" data-ru="Помочь">Көмектесу</span>
+	</a>
+
+	<!-- Live Donation Feed -->
+	<div class="donation-feed" id="donation-feed">
+		<div class="donation-feed-header" id="donation-feed-toggle">
+			<span class="feed-dot"></span>
+			<span data-kk="Тікелей" data-ru="Live">Тікелей</span>
+			<span class="feed-toggle-icon">▼</span>
+		</div>
+		<div class="donation-list" id="donation-list">
+			<!-- Donations will be added here by JavaScript -->
+		</div>
+	</div>
+
+	<!-- Header -->
+	<header class="header">
+		<div class="container header-content">
+			<a href="#" class="logo">
+				<span class="logo-1">1</span><span class="logo-eq">=</span><span class="logo-ge">GE</span>
+			</a>
+			<nav class="nav" id="nav">
+				<a href="#how-it-works" class="nav-link" data-kk="Қалай жұмыс істейді" data-ru="Как это работает">Қалай
+					жұмыс
+					істейді</a>
+				<a href="#for-whom" class="nav-link" data-kk="Кімдер үшін" data-ru="Для кого">Кімдер үшін</a>
+				<a href="#calculator" class="nav-link" data-kk="Калькулятор" data-ru="Калькулятор">Калькулятор</a>
+				<a href="#faq" class="nav-link">FAQ</a>
+			</nav>
+
+			<!-- Language Switcher -->
+			<div class="lang-switcher" id="lang-switcher">
+				<button class="lang-btn active" data-lang="kk">KZ</button>
+				<button class="lang-btn" data-lang="ru">RU</button>
+			</div>
+
+			<!-- Theme Toggle -->
+			<button class="theme-toggle" id="theme-toggle" aria-label="Тема">
+				<span class="theme-icon-dark">🌙</span>
+				<span class="theme-icon-light">☀️</span>
+			</button>
+
+			<a href="#join" class="btn btn-primary header-cta" data-kk="Қосылу" data-ru="Присоединиться">Қосылу</a>
+			<button class="menu-toggle" id="menu-toggle" aria-label="Меню">
+				<span></span>
+				<span></span>
+				<span></span>
+			</button>
+		</div>
+	</header>
+
+	<!-- Hero Section -->
+	<section class="hero">
+		<!-- Animated Background Elements -->
+		<div class="hero-orb hero-orb-1"></div>
+		<div class="hero-orb hero-orb-2"></div>
+		<div class="hero-orb hero-orb-3"></div>
+
+		<!-- Floating Particles -->
+		<div class="hero-particles">
+			<div class="particle"></div>
+			<div class="particle"></div>
+			<div class="particle"></div>
+			<div class="particle"></div>
+			<div class="particle"></div>
+			<div class="particle"></div>
+			<div class="particle"></div>
+			<div class="particle"></div>
+			<div class="particle"></div>
+			<div class="particle"></div>
+		</div>
+
+		<div class="container hero-content">
+			<div class="hero-text">
+				<h1 class="hero-title">
+					<span class="hero-logo">1<span class="hero-eq">=</span>GE</span>
+					<span class="hero-subtitle" data-kk="1 теңге. Күн сайын. Бірге."
+						data-ru="1 тенге. Каждый день. Вместе.">1
+						теңге. Күн сайын. Бірге.</span>
+				</h1>
+				<p class="hero-description"
+					data-kk="20 миллион қазақстандық × 1₸ = <strong>20 000 000₸ күн сайын</strong>. Бір теңге — ештеңе емес. Бірге — бәрін өзгерте аламыз."
+					data-ru="20 миллионов казахстанцев × 1₸ = <strong>20 000 000₸ в день</strong>. Один тенге — ничто. Вместе — мы можем изменить всё.">
+					20 миллион қазақстандық × 1₸ = <strong>20 000 000₸ күн сайын</strong>.
+					Бір теңге — ештеңе емес. Бірге — бәрін өзгерте аламыз.
+				</p>
+				<div class="hero-buttons">
+					<a href="#join" class="btn btn-primary btn-large">
+						<span class="btn-emoji">🤝</span> <span data-kk="Көмектескім келеді"
+							data-ru="Хочу помогать">Көмектескім
+							келеді</span>
+					</a>
+					<a href="#join" class="btn btn-secondary btn-large">
+						<span class="btn-emoji">🙏</span> <span data-kk="Көмек керек" data-ru="Нужна помощь">Көмек
+							керек</span>
+					</a>
+				</div>
+
+				<!-- Trust badges -->
+				<div class="trust-badges">
+					<div class="trust-badge">
+						<span class="trust-icon">🔒</span>
+						<span class="trust-text" data-kk="Қауіпсіз төлем" data-ru="Безопасная оплата">Қауіпсіз
+							төлем</span>
+					</div>
+					<div class="trust-badge">
+						<span class="trust-icon">✅</span>
+						<span class="trust-text" data-kk="Верификация" data-ru="Верификация">Верификация</span>
+					</div>
+					<div class="trust-badge">
+						<span class="trust-icon">📊</span>
+						<span class="trust-text" data-kk="Мөлдір есеп" data-ru="Прозрачный отчёт">Мөлдір есеп</span>
+					</div>
+				</div>
+			</div>
+			<div class="hero-visual">
+				<div class="coin-container">
+					<div class="coin-animation">
+						<!-- Floating Tenge Symbols -->
+						<span class="floating-tenge">₸</span>
+						<span class="floating-tenge">₸</span>
+						<span class="floating-tenge">₸</span>
+						<span class="floating-tenge">₸</span>
+						<span class="floating-tenge">₸</span>
+						<span class="floating-tenge">₸</span>
+
+						<!-- Orbit Rings -->
+						<div class="coin-ring coin-ring-1"></div>
+						<div class="coin-ring coin-ring-2"></div>
+
+						<!-- Main Coin -->
+						<div class="coin">1₸</div>
+
+						<!-- Ripples -->
+						<div class="coin-ripple"></div>
+						<div class="coin-ripple"></div>
+						<div class="coin-ripple"></div>
+						<div class="coin-ripple"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Scroll Indicator -->
+		<div class="scroll-indicator">
+			<div class="scroll-mouse">
+				<div class="scroll-wheel"></div>
+			</div>
+			<span class="scroll-text" data-kk="Төмен қарай" data-ru="Вниз">Төмен қарай</span>
+		</div>
+	</section>
+
+	<!-- How It Works -->
+	<section class="section" id="how-it-works">
+		<div class="container">
+			<h2 class="section-title reveal" data-kk="Қалай жұмыс істейді?" data-ru="Как это работает?">Қалай жұмыс
+				істейді?
+			</h2>
+			<p class="section-subtitle reveal" data-kk="Үш қарапайым қадам" data-ru="Три простых шага">Үш қарапайым
+				қадам</p>
+			<div class="steps">
+				<div class="step reveal">
+					<div class="step-number">1</div>
+					<div class="step-icon">📱</div>
+					<h3 class="step-title" data-kk="Тіркеліңіз" data-ru="Регистрация">Тіркеліңіз</h3>
+					<p class="step-description" data-kk="Аккаунт жасап, картаңызды қосыңыз"
+						data-ru="Создайте аккаунт и привяжите карту">Аккаунт жасап, картаңызды қосыңыз</p>
+				</div>
+				<div class="step-arrow reveal">→</div>
+				<div class="step reveal">
+					<div class="step-number">2</div>
+					<div class="step-icon">💳</div>
+					<h3 class="step-title" data-kk="1₸ күн сайын" data-ru="1₸ каждый день">1₸ күн сайын</h3>
+					<p class="step-description" data-kk="Автоматты түрде 1 теңге есептен шығарылады"
+						data-ru="Автоматически списывается 1 тенге">Автоматты түрде 1 теңге есептен шығарылады</p>
+				</div>
+				<div class="step-arrow reveal">→</div>
+				<div class="step reveal">
+					<div class="step-number">3</div>
+					<div class="step-icon">❤️</div>
+					<h3 class="step-title" data-kk="Көмек жетеді" data-ru="Помощь доходит">Көмек жетеді</h3>
+					<p class="step-description" data-kk="Сіздің теңгеңіз нақты адамдарға жетеді"
+						data-ru="Ваш тенге доходит до реальных людей">Сіздің теңгеңіз нақты адамдарға жетеді</p>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- Impact Statistics -->
+	<section class="section section-alt" id="calculator">
+		<div class="container">
+			<h2 class="section-title reveal" data-kk="Біздің әсеріміз" data-ru="Наше влияние">Біздің әсеріміз</h2>
+			<p class="section-subtitle reveal" data-kk="Бірге біз күн сайын өмірлерді өзгертеміз"
+				data-ru="Вместе мы меняем жизни каждый день">Бірге біз күн сайын өмірлерді өзгертеміз</p>
+
+			<div class="impact-stats reveal">
+				<div class="impact-stat impact-stat-main">
+					<div class="impact-icon">👥</div>
+					<div class="impact-number" data-target="10000">0</div>
+					<div class="impact-label" data-kk="донатер қазір бізбен" data-ru="донатеров уже с нами">донатер
+						қазір бізбен</div>
+				</div>
+
+				<div class="impact-stat">
+					<div class="impact-icon">📅</div>
+					<div class="impact-number">10 000₸</div>
+					<div class="impact-label" data-kk="күн сайын жинаймыз" data-ru="собираем в день">күн сайын жинаймыз
+					</div>
+				</div>
+
+				<div class="impact-stat">
+					<div class="impact-icon">📆</div>
+					<div class="impact-number">300 000₸</div>
+					<div class="impact-label" data-kk="ай сайын жинаймыз" data-ru="собираем в месяц">ай сайын жинаймыз
+					</div>
+				</div>
+
+				<div class="impact-stat">
+					<div class="impact-icon">❤️</div>
+					<div class="impact-number" data-target="6">0</div>
+					<div class="impact-label" data-kk="отбасы көмек алуда" data-ru="семей получают помощь">отбасы көмек
+						алуда</div>
+				</div>
+			</div>
+
+			<div class="impact-message reveal">
+				<div class="impact-message-icon">🌟</div>
+				<p class="impact-message-text"
+					data-kk="<strong>Сіздің 1 теңгеңіз</strong> — бұл тек тиын емес. Бұл біреудің тамақ дастарханы, балаларға кітап, науқасқа дәрі. Бірге біз мүмкін еместі мүмкін етеміз."
+					data-ru="<strong>Ваш 1 тенге</strong> — это не просто монета. Это чей-то обед, книги для детей, лекарство для больного. Вместе мы делаем невозможное возможным.">
+					<strong>Сіздің 1 теңгеңіз</strong> — бұл тек тиын емес. Бұл біреудің тамақ дастарханы, балаларға
+					кітап, науқасқа дәрі. Бірге біз мүмкін еместі мүмкін етеміз.
+				</p>
+			</div>
+
+			<div class="community-badge reveal">
+				<div class="community-icon">🤝</div>
+				<p class="community-text"
+					data-kk="Тіркелген сәттен бастап сіз <strong>1=GE қауымдастығының</strong> мүшесі боласыз!"
+					data-ru="С момента регистрации вы становитесь частью <strong>сообщества 1=GE</strong>!">
+					Тіркелген сәттен бастап сіз <strong>1=GE қауымдастығының</strong> мүшесі боласыз!
+				</p>
+				<a href="#join" class="btn btn-primary" data-kk="Қосылу" data-ru="Присоединиться">Қосылу</a>
+			</div>
+		</div>
+	</section>
+
+	<!-- For Whom -->
+	<section class="section" id="for-whom">
+		<div class="container">
+			<h2 class="section-title reveal" data-kk="Кімдер үшін?" data-ru="Для кого?">Кімдер үшін?</h2>
+			<div class="cards">
+				<div class="card card-donor reveal">
+					<div class="card-icon">🤝</div>
+					<h3 class="card-title" data-kk="Көмектесушілер" data-ru="Помогающие">Көмектесушілер</h3>
+					<p class="card-description"
+						data-kk="Күн сайын 1 теңге — сізге байқалмайды, бірақ біреудің өмірін өзгертеді."
+						data-ru="1 тенге в день — вы не заметите, но это изменит чью-то жизнь.">
+						Күн сайын 1 теңге — сізге байқалмайды, бірақ біреудің өмірін өзгертеді.
+					</p>
+					<ul class="card-list">
+						<li data-kk="Автоматты жазылым" data-ru="Автоматическая подписка">Автоматты жазылым</li>
+						<li data-kk="Нақты адамдардың тарихын көру" data-ru="Истории реальных людей">Нақты адамдардың
+							тарихын көру
+						</li>
+						<li data-kk="Қосымша донат жасау мүмкіндігі" data-ru="Возможность дополнительных донатов">
+							Қосымша донат
+							жасау мүмкіндігі</li>
+						<li data-kk="Жеке статистика" data-ru="Личная статистика">Жеке статистика</li>
+					</ul>
+					<a href="#join" class="btn btn-primary btn-full" data-kk="Қосылу"
+						data-ru="Присоединиться">Қосылу</a>
+				</div>
+				<div class="card card-recipient reveal">
+					<div class="card-icon">🙏</div>
+					<h3 class="card-title" data-kk="Көмек алушылар" data-ru="Получающие помощь">Көмек алушылар</h3>
+					<p class="card-description" data-kk="Верификациядан өткен отбасылар мен жеке тұлғалар."
+						data-ru="Верифицированные семьи и частные лица.">
+						Верификациядан өткен отбасылар мен жеке тұлғалар.
+					</p>
+					<ul class="card-list">
+						<li data-kk="Толық верификация" data-ru="Полная верификация">Толық верификация</li>
+						<li data-kk="Өмірлік қажеттіліктерді жабу" data-ru="Покрытие жизненных нужд">Өмірлік
+							қажеттіліктерді жабу
+						</li>
+						<li data-kk="Такси, автобус, дүкен төлемдері" data-ru="Оплата такси, автобуса, магазинов">Такси,
+							автобус,
+							дүкен төлемдері</li>
+						<li data-kk="Мөлдір есептілік" data-ru="Прозрачная отчётность">Мөлдір есептілік</li>
+					</ul>
+					<a href="#join" class="btn btn-secondary btn-full" data-kk="Өтінім беру"
+						data-ru="Подать заявку">Өтінім
+						беру</a>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- Stats -->
+	<section class="section stats-section">
+		<div class="container">
+			<div class="stats">
+				<div class="stat reveal">
+					<div class="stat-number" data-target="20000000">0</div>
+					<div class="stat-label" data-kk="потенциалды қатысушылар" data-ru="потенциальных участников">
+						потенциалды
+						қатысушылар</div>
+				</div>
+				<div class="stat reveal">
+					<div class="stat-number">1₸</div>
+					<div class="stat-label" data-kk="күн сайын" data-ru="в день">күн сайын</div>
+				</div>
+				<div class="stat reveal">
+					<div class="stat-number">∞</div>
+					<div class="stat-label" data-kk="өзгертілетін өмірлер" data-ru="изменённых жизней">өзгертілетін
+						өмірлер</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- Partners -->
+	<section class="section section-alt" id="partners">
+		<div class="container">
+			<h2 class="section-title reveal" data-kk="Болашақ серіктестер" data-ru="Будущие партнёры">Болашақ
+				серіктестер</h2>
+			<p class="section-subtitle reveal" data-kk="Біз үлкен компаниялармен жұмыс істегіміз келеді"
+				data-ru="Мы хотим работать с крупными компаниями">Біз үлкен компаниялармен жұмыс істегіміз келеді</p>
+
+			<div class="partners-grid reveal">
+				<div class="partner-slot">
+					<div class="partner-placeholder">🏦</div>
+					<span data-kk="Банктер" data-ru="Банки">Банктер</span>
+				</div>
+				<div class="partner-slot">
+					<div class="partner-placeholder">🛒</div>
+					<span data-kk="Дүкендер" data-ru="Магазины">Дүкендер</span>
+				</div>
+				<div class="partner-slot">
+					<div class="partner-placeholder">🚕</div>
+					<span data-kk="Такси" data-ru="Такси">Такси</span>
+				</div>
+				<div class="partner-slot">
+					<div class="partner-placeholder">🍔</div>
+					<span data-kk="Жеткізу" data-ru="Доставка">Жеткізу</span>
+				</div>
+				<div class="partner-slot">
+					<div class="partner-placeholder">💊</div>
+					<span data-kk="Дәріхана" data-ru="Аптеки">Дәріхана</span>
+				</div>
+				<div class="partner-slot partner-slot-cta">
+					<div class="partner-placeholder">🤝</div>
+					<span data-kk="Сіз бе?" data-ru="Вы?">Сіз бе?</span>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- FAQ -->
+	<section class="section" id="faq">
+		<div class="container">
+			<h2 class="section-title reveal" data-kk="Жиі қойылатын сұрақтар" data-ru="Часто задаваемые вопросы">Жиі
+				қойылатын
+				сұрақтар</h2>
+			<div class="faq-list">
+				<div class="faq-item">
+					<button class="faq-question">
+						<span data-kk="1 теңге шынымен көмектесе ала ма?"
+							data-ru="1 тенге действительно может помочь?">1 теңге
+							шынымен көмектесе ала ма?</span>
+						<span class="faq-icon">+</span>
+					</button>
+					<div class="faq-answer">
+						<p data-kk="Иә! Егер 1 миллион адам күн сайын 1 теңгеден берсе — бұл айына 30 миллион теңге. Бірге біз таулар жылжыта аламыз."
+							data-ru="Да! Если 1 миллион человек даст по 1 тенге в день — это 30 миллионов тенге в месяц. Вместе мы можем горы свернуть.">
+							Иә! Егер 1 миллион адам күн сайын 1 теңгеден берсе — бұл айына 30 миллион теңге. Бірге біз
+							таулар жылжыта
+							аламыз.</p>
+					</div>
+				</div>
+				<div class="faq-item">
+					<button class="faq-question">
+						<span data-kk="Ақша қайда кетеді?" data-ru="Куда идут деньги?">Ақша қайда кетеді?</span>
+						<span class="faq-icon">+</span>
+					</button>
+					<div class="faq-answer">
+						<p data-kk="Барлық қаражат верификацияланған адамдарға тікелей жетеді. Олар бұл ақшаны тек серіктес дүкендер мен қызметтерде жұмсай алады."
+							data-ru="Все средства напрямую поступают верифицированным людям. Они могут потратить эти деньги только в партнёрских магазинах и сервисах.">
+							Барлық қаражат верификацияланған адамдарға тікелей жетеді. Олар бұл ақшаны тек серіктес
+							дүкендер мен
+							қызметтерде жұмсай алады.</p>
+					</div>
+				</div>
+				<div class="faq-item">
+					<button class="faq-question">
+						<span data-kk="Жазылымды қалай тоқтатуға болады?" data-ru="Как отменить подписку?">Жазылымды
+							қалай тоқтатуға
+							болады?</span>
+						<span class="faq-icon">+</span>
+					</button>
+					<div class="faq-answer">
+						<p data-kk="Кез келген уақытта қосымшадағы профіліңізден жазылымды тоқтата аласыз. Ешқандай жасырын шарттар жоқ."
+							data-ru="В любой момент в профиле приложения вы можете отменить подписку. Никаких скрытых условий.">
+							Кез
+							келген уақытта қосымшадағы профіліңізден жазылымды тоқтата аласыз. Ешқандай жасырын шарттар
+							жоқ.</p>
+					</div>
+				</div>
+				<div class="faq-item">
+					<button class="faq-question">
+						<span data-kk="Көмек алу үшін не істеу керек?" data-ru="Как получить помощь?">Көмек алу үшін не
+							істеу
+							керек?</span>
+						<span class="faq-icon">+</span>
+					</button>
+					<div class="faq-answer">
+						<p data-kk="Өтінім қалдырыңыз, біздің команда сізбен байланысады. Верификациядан өткеннен кейін көмек ала бастайсыз."
+							data-ru="Оставьте заявку, наша команда свяжется с вами. После верификации вы начнёте получать помощь.">
+							Өтінім қалдырыңыз, біздің команда сізбен байланысады. Верификациядан өткеннен кейін көмек
+							ала бастайсыз.
+						</p>
+					</div>
+				</div>
+				<div class="faq-item">
+					<button class="faq-question">
+						<span data-kk="Бұл алаяқтық емес пе?" data-ru="Это не мошенничество?">Бұл алаяқтық емес
+							пе?</span>
+						<span class="faq-icon">+</span>
+					</button>
+					<div class="faq-answer">
+						<p data-kk="Жоқ! Біз толық мөлдір жұмыс істейміз. Барлық транзакциялар көрінеді, барлық алушылар верификацияланған. Сіз өз ақшаңыздың қайда кеткенін әрқашан көре аласыз."
+							data-ru="Нет! Мы работаем полностью прозрачно. Все транзакции видны, все получатели верифицированы. Вы всегда можете видеть куда ушли ваши деньги.">
+							Жоқ! Біз толық мөлдір жұмыс істейміз. Барлық транзакциялар көрінеді, барлық алушылар
+							верификацияланған.
+							Сіз өз ақшаңыздың қайда кеткенін әрқашан көре аласыз.</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- Join Form -->
+	<section class="section join-section" id="join">
+		<div class="container">
+			<div class="join-content">
+				<h2 class="section-title reveal" data-kk="Бізге қосылыңыз" data-ru="Присоединяйтесь к нам">Бізге
+					қосылыңыз</h2>
+				<p class="section-subtitle reveal" data-kk="Жуық арада іске қосыламыз. Бірінші болыңыз!"
+					data-ru="Скоро запускаемся. Будьте первыми!">Жуық арада іске қосыламыз. Бірінші болыңыз!</p>
+				<form class="join-form reveal" id="join-form">
+					<div class="form-group">
+						<input type="text" name="name" data-placeholder-kk="Атыңыз" data-placeholder-ru="Ваше имя"
+							placeholder="Атыңыз" required class="form-input">
+					</div>
+					<div class="form-row">
+						<div class="form-group">
+							<input type="email" name="email" placeholder="Email" class="form-input">
+						</div>
+						<div class="form-group">
+							<input type="tel" name="phone" placeholder="+7 (___) ___-__-__" required class="form-input">
+						</div>
+					</div>
+					<div class="form-group">
+						<select name="type" required class="form-input" id="form-type-select">
+							<option value="" disabled selected data-kk="Мен..." data-ru="Я...">Мен...</option>
+							<option value="donor" data-kk="Көмектескім келеді" data-ru="Хочу помогать">Көмектескім
+								келеді</option>
+							<option value="recipient" data-kk="Көмек керек" data-ru="Нужна помощь">Көмек керек</option>
+							<option value="partner" data-kk="Серіктес болғым келеді" data-ru="Хочу стать партнёром">
+								Серіктес болғым
+								келеді</option>
+							<option value="both" data-kk="Екеуі де" data-ru="Оба варианта">Екеуі де</option>
+						</select>
+					</div>
+					<button type="submit" class="btn btn-primary btn-large btn-full">
+						<span class="btn-emoji">🚀</span> <span data-kk="Өтінім қалдыру"
+							data-ru="Оставить заявку">Өтінім
+							қалдыру</span>
+					</button>
+				</form>
+				<p class="form-note reveal" data-kk="Деректеріңіз қауіпсіз сақталады 🔒"
+					data-ru="Ваши данные в безопасности 🔒">Деректеріңіз қауіпсіз сақталады 🔒</p>
+			</div>
+		</div>
+	</section>
+
+	<!-- Footer -->
+	<footer class="footer">
+		<div class="container footer-content">
+			<div class="footer-brand">
+				<a href="#" class="logo">
+					<span class="logo-1">1</span><span class="logo-eq">=</span><span class="logo-ge">GE</span>
+				</a>
+				<p class="footer-tagline">1 теңге. Бірге.</p>
+			</div>
+			<div class="footer-links">
+				<a href="#how-it-works" data-kk="Қалай жұмыс істейді" data-ru="Как это работает">Қалай жұмыс істейді</a>
+				<a href="#calculator" data-kk="Калькулятор" data-ru="Калькулятор">Калькулятор</a>
+				<a href="#for-whom" data-kk="Кімдер үшін" data-ru="Для кого">Кімдер үшін</a>
+				<a href="#faq">FAQ</a>
+				<a href="#join" data-kk="Қосылу" data-ru="Присоединиться">Қосылу</a>
+			</div>
+			<div class="footer-social">
+				<a href="#" aria-label="Instagram">📷</a>
+				<a href="#" aria-label="Telegram">✈️</a>
+				<a href="#" aria-label="WhatsApp">💬</a>
+				<a href="#" aria-label="TikTok">🎵</a>
+			</div>
+		</div>
+		<div class="footer-bottom">
+			<div class="container">
+				<p data-kk="© 2024 1=GE. Барлық құқықтар қорғалған. 🇰🇿 Қазақстанда жасалған"
+					data-ru="© 2024 1=GE. Все права защищены. 🇰🇿 Сделано в Казахстане">© 2024 1=GE. Барлық құқықтар
+					қорғалған.
+					🇰🇿 Қазақстанда жасалған</p>
+			</div>
+		</div>
+	</footer>
+
+	<!-- Success Modal -->
+	<div class="modal" id="success-modal">
+		<div class="modal-content">
+			<div class="modal-icon">🎉</div>
+			<h3 class="modal-title" data-kk="Рахмет!" data-ru="Спасибо!">Рахмет!</h3>
+			<p class="modal-text" data-kk="Өтініміңіз қабылданды. Жуық арада сізбен байланысамыз."
+				data-ru="Ваша заявка принята. Скоро свяжемся с вами.">Өтініміңіз қабылданды. Жуық арада сізбен
+				байланысамыз.</p>
+			<div class="modal-share">
+				<p data-kk="Достарыңызбен бөлісіңіз:" data-ru="Поделитесь с друзьями:">Достарыңызбен бөлісіңіз:</p>
+				<div class="share-buttons">
+					<button class="share-btn" data-platform="whatsapp">💬 WhatsApp</button>
+					<button class="share-btn" data-platform="telegram">✈️ Telegram</button>
+				</div>
+			</div>
+			<button class="btn btn-primary" id="modal-close" data-kk="Тамаша!" data-ru="Отлично!">Тамаша!</button>
+		</div>
+	</div>
+
+	<script src="script.js"></script>
+</body>
+
+</html>
