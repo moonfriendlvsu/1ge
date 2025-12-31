@@ -42,6 +42,118 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // ========================================
+    // Daily Counter & Timer
+    // ========================================
+    const dailyCounter = document.getElementById('daily-counter');
+    const timeRemaining = document.getElementById('time-remaining');
+    const dailyProgress = document.getElementById('daily-progress');
+
+    // Simulated daily amount (in real app this would come from backend)
+    let currentAmount = 347825;
+    const dailyGoal = 1000000;
+
+    // Animate counter
+    function animateCounter(target, element) {
+        let current = 0;
+        const increment = target / 50;
+        const timer = setInterval(() => {
+            current += increment;
+            if (current >= target) {
+                current = target;
+                clearInterval(timer);
+            }
+            element.textContent = formatNumber(Math.floor(current));
+        }, 30);
+    }
+
+    if (dailyCounter) {
+        // Animate initial value
+        animateCounter(currentAmount, dailyCounter);
+
+        // Update progress bar
+        if (dailyProgress) {
+            const progressPercent = Math.min((currentAmount / dailyGoal) * 100, 100);
+            dailyProgress.style.width = progressPercent + '%';
+        }
+
+        // Randomly add donations
+        setInterval(() => {
+            const addition = Math.random() > 0.7 ?
+                Math.floor(Math.random() * 100) + 10 : 1;
+            currentAmount += addition;
+            dailyCounter.textContent = formatNumber(currentAmount);
+
+            if (dailyProgress) {
+                const progressPercent = Math.min((currentAmount / dailyGoal) * 100, 100);
+                dailyProgress.style.width = progressPercent + '%';
+            }
+        }, 2000 + Math.random() * 3000);
+    }
+
+    // Countdown timer to midnight
+    function updateTimeRemaining() {
+        const now = new Date();
+        const midnight = new Date();
+        midnight.setHours(24, 0, 0, 0);
+
+        const diff = midnight - now;
+        const hours = Math.floor(diff / (1000 * 60 * 60));
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+        if (timeRemaining) {
+            timeRemaining.textContent =
+                String(hours).padStart(2, '0') + ':' +
+                String(minutes).padStart(2, '0') + ':' +
+                String(seconds).padStart(2, '0');
+        }
+    }
+
+    if (timeRemaining) {
+        updateTimeRemaining();
+        setInterval(updateTimeRemaining, 1000);
+    }
+
+    // ========================================
+    // Share Buttons
+    // ========================================
+    const shareUrl = 'https://cheery-alpaca-83eab9.netlify.app';
+    const shareText = '1=GE — 1 теңге күн сайын. Бірге біз таулар жылжыта аламыз! 🇰🇿';
+
+    const shareWhatsapp = document.getElementById('share-whatsapp');
+    const shareTelegram = document.getElementById('share-telegram');
+    const shareCopy = document.getElementById('share-copy');
+
+    if (shareWhatsapp) {
+        shareWhatsapp.href = `https://wa.me/?text=${encodeURIComponent(shareText + ' ' + shareUrl)}`;
+        shareWhatsapp.target = '_blank';
+    }
+
+    if (shareTelegram) {
+        shareTelegram.href = `https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareText)}`;
+        shareTelegram.target = '_blank';
+    }
+
+    if (shareCopy) {
+        shareCopy.addEventListener('click', function (e) {
+            e.preventDefault();
+            navigator.clipboard.writeText(shareUrl).then(() => {
+                // Show feedback
+                const originalHTML = this.innerHTML;
+                this.innerHTML = '✓';
+                this.style.background = 'var(--color-primary)';
+                this.style.color = 'white';
+
+                setTimeout(() => {
+                    this.innerHTML = originalHTML;
+                    this.style.background = '';
+                    this.style.color = '';
+                }, 2000);
+            });
+        });
+    }
+
+    // ========================================
     // Language Switcher
     // ========================================
     let currentLang = localStorage.getItem('1ge-lang') || 'kk';
