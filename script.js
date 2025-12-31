@@ -41,7 +41,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // ========================================
     // Daily Counter & Timer
     // ========================================
     const dailyCounter = document.getElementById('daily-counter');
@@ -66,6 +65,18 @@ document.addEventListener('DOMContentLoaded', function () {
         }, 30);
     }
 
+    // Function to add amount to daily counter (used by live feed)
+    function addToCounter(amount) {
+        currentAmount += amount;
+        if (dailyCounter) {
+            dailyCounter.textContent = formatNumber(currentAmount);
+        }
+        if (dailyProgress) {
+            const progressPercent = Math.min((currentAmount / dailyGoal) * 100, 100);
+            dailyProgress.style.width = progressPercent + '%';
+        }
+    }
+
     if (dailyCounter) {
         // Animate initial value
         animateCounter(currentAmount, dailyCounter);
@@ -75,19 +86,6 @@ document.addEventListener('DOMContentLoaded', function () {
             const progressPercent = Math.min((currentAmount / dailyGoal) * 100, 100);
             dailyProgress.style.width = progressPercent + '%';
         }
-
-        // Randomly add donations
-        setInterval(() => {
-            const addition = Math.random() > 0.7 ?
-                Math.floor(Math.random() * 100) + 10 : 1;
-            currentAmount += addition;
-            dailyCounter.textContent = formatNumber(currentAmount);
-
-            if (dailyProgress) {
-                const progressPercent = Math.min((currentAmount / dailyGoal) * 100, 100);
-                dailyProgress.style.width = progressPercent + '%';
-            }
-        }, 2000 + Math.random() * 3000);
     }
 
     // Countdown timer to midnight
@@ -535,9 +533,13 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!donationList) return;
 
         const randomName = kazNames[Math.floor(Math.random() * kazNames.length)];
-        const randomAmount = Math.random() > 0.7 ?
-            (Math.floor(Math.random() * 10) + 1) * 10 + '₸' : '1₸';
+        const amountNum = Math.random() > 0.7 ?
+            (Math.floor(Math.random() * 10) + 1) * 10 : 1;
+        const randomAmount = amountNum + '₸';
         const initial = randomName.charAt(0);
+
+        // Add to daily counter (sync with main counter)
+        addToCounter(amountNum);
 
         // Create donation item
         const donationItem = document.createElement('div');
