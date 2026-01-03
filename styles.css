@@ -492,6 +492,193 @@ body::before {
 }
 
 /* ========================================
+   Power Calculator Section
+   ======================================== */
+
+.power-calculator {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: var(--space-8);
+    background: var(--color-bg-card);
+    border-radius: var(--radius-2xl);
+    border: 1px solid var(--color-border);
+}
+
+.power-slider-container {
+    text-align: center;
+    margin-bottom: var(--space-8);
+}
+
+.slider-label {
+    display: block;
+    font-size: var(--font-size-lg);
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-4);
+}
+
+.power-slider {
+    width: 100%;
+    height: 12px;
+    border-radius: var(--radius-full);
+    background: linear-gradient(90deg, var(--color-bg-alt) 0%, var(--color-primary) 100%);
+    outline: none;
+    -webkit-appearance: none;
+    appearance: none;
+    cursor: pointer;
+}
+
+.power-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--color-primary);
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(16, 185, 129, 0.5);
+    border: 3px solid white;
+    transition: transform 0.2s;
+}
+
+.power-slider::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+}
+
+.power-slider::-moz-range-thumb {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--color-primary);
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(16, 185, 129, 0.5);
+    border: 3px solid white;
+}
+
+.slider-value {
+    margin-top: var(--space-4);
+    font-size: var(--font-size-2xl);
+    font-weight: 700;
+    color: var(--color-text);
+}
+
+.slider-value span:first-child {
+    color: var(--color-primary);
+}
+
+.power-results {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-4);
+    margin-bottom: var(--space-6);
+}
+
+.power-card {
+    text-align: center;
+    padding: var(--space-4);
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--color-border);
+    transition: all var(--transition-base);
+}
+
+.power-card:hover {
+    border-color: var(--color-primary);
+    transform: translateY(-5px);
+}
+
+.power-card-main {
+    background: rgba(16, 185, 129, 0.1);
+    border-color: var(--color-primary);
+}
+
+.power-icon {
+    font-size: 2rem;
+    margin-bottom: var(--space-2);
+}
+
+.power-amount {
+    font-size: var(--font-size-xl);
+    font-weight: 800;
+    color: var(--color-text);
+    transition: all 0.3s;
+}
+
+.power-card-main .power-amount {
+    color: var(--color-primary);
+    font-size: var(--font-size-2xl);
+}
+
+.power-label {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+    margin-top: var(--space-1);
+}
+
+.power-impact {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-3);
+    padding: var(--space-4);
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(6, 182, 212, 0.1));
+    border-radius: var(--radius-lg);
+    margin-bottom: var(--space-6);
+    animation: pulse-bg 3s ease-in-out infinite;
+}
+
+@keyframes pulse-bg {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+.impact-icon {
+    font-size: 2rem;
+}
+
+.impact-text {
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    color: var(--color-text);
+}
+
+.power-message {
+    text-align: center;
+    font-size: var(--font-size-xl);
+    color: var(--color-text-muted);
+}
+
+.power-message strong {
+    color: var(--color-primary);
+}
+
+@media (max-width: 768px) {
+    .power-results {
+        grid-template-columns: 1fr;
+        gap: var(--space-3);
+    }
+    
+    .power-card {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: var(--space-3) var(--space-4);
+    }
+    
+    .power-icon {
+        font-size: 1.5rem;
+        margin-bottom: 0;
+    }
+    
+    .power-amount {
+        font-size: var(--font-size-lg);
+    }
+    
+    .power-label {
+        margin-top: 0;
+    }
+}
+
+/* ========================================
    Glassmorphism
    ======================================== */
 

@@ -311,12 +311,55 @@
 		</div>
 	</section>
 
-	<!-- Impact Statistics -->
-	<section class="section section-alt" id="calculator">
+	<!-- Power Calculator Section -->
+	<section class="section section-alt" id="power">
 		<div class="container">
-			<h2 class="section-title reveal" data-kk="Біздің әсеріміз" data-ru="Наше влияние">Біздің әсеріміз</h2>
-			<p class="section-subtitle reveal" data-kk="Бірге біз күн сайын өмірлерді өзгертеміз"
-				data-ru="Вместе мы меняем жизни каждый день">Бірге біз күн сайын өмірлерді өзгертеміз</p>
+			<h2 class="section-title reveal" data-kk="1₸ күші" data-ru="Сила 1₸">1₸ күші</h2>
+			<p class="section-subtitle reveal" data-kk="Қаншама көп болсақ, соншама күшті боламыз" data-ru="Чем нас больше, тем мы сильнее">Қаншама көп болсақ, соншама күшті боламыз</p>
+			
+			<div class="power-calculator reveal">
+				<div class="power-slider-container">
+					<label class="slider-label" data-kk="Біз қанша адампыз?" data-ru="Сколько нас?">Біз қанша адампыз?</label>
+					<input type="range" id="power-slider" class="power-slider" min="1" max="1000000" value="10000" step="1000">
+					<div class="slider-value">
+						<span id="people-count">10 000</span>
+						<span data-kk="адам" data-ru="человек">адам</span>
+					</div>
+				</div>
+				
+				<div class="power-results">
+					<div class="power-card power-card-main">
+						<div class="power-icon">💰</div>
+						<div class="power-amount" id="power-daily">10 000₸</div>
+						<div class="power-label" data-kk="күн сайын" data-ru="каждый день">күн сайын</div>
+					</div>
+					<div class="power-card">
+						<div class="power-icon">📅</div>
+						<div class="power-amount" id="power-monthly">300 000₸</div>
+						<div class="power-label" data-kk="ай сайын" data-ru="каждый месяц">ай сайын</div>
+					</div>
+					<div class="power-card">
+						<div class="power-icon">📆</div>
+						<div class="power-amount" id="power-yearly">3 650 000₸</div>
+						<div class="power-label" data-kk="жыл сайын" data-ru="каждый год">жыл сайын</div>
+					</div>
+				</div>
+				
+				<div class="power-impact" id="power-impact">
+					<div class="impact-icon">🏥</div>
+					<div class="impact-text" id="impact-text" data-kk="10 отбасына медициналық көмек" data-ru="Медицинская помощь 10 семьям">10 отбасына медициналық көмек</div>
+				</div>
+				
+				<div class="power-message reveal">
+					<p data-kk="Бір теңге — ештеңе емес. Бірге — бәрін өзгерте аламыз!" data-ru="Один тенге — ничто. Вместе — мы меняем всё!">
+						Бір теңге — ештеңе емес. <strong>Бірге — бәрін өзгерте аламыз!</strong>
+					</p>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- Impact Statistics -->
 
 			<div class="impact-stats reveal">
 				<div class="impact-stat impact-stat-main">

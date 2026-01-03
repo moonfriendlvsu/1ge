@@ -152,6 +152,61 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // ========================================
+    // Power Calculator
+    // ========================================
+    const powerSlider = document.getElementById('power-slider');
+    const peopleCount = document.getElementById('people-count');
+    const powerDaily = document.getElementById('power-daily');
+    const powerMonthly = document.getElementById('power-monthly');
+    const powerYearly = document.getElementById('power-yearly');
+    const impactText = document.getElementById('impact-text');
+    
+    const impacts = [
+        { threshold: 100, icon: '🛒', kk: 'Бір отбасына азық-түлік', ru: 'Продукты для одной семьи' },
+        { threshold: 1000, icon: '💊', kk: '10 адамға дәрі-дәрмек', ru: 'Лекарства для 10 человек' },
+        { threshold: 10000, icon: '🏥', kk: '10 отбасына медициналық көмек', ru: 'Медицинская помощь 10 семьям' },
+        { threshold: 100000, icon: '🏫', kk: '100 балаға оқу құралдары', ru: 'Учебники для 100 детей' },
+        { threshold: 500000, icon: '🏠', kk: '50 отбасына коммуналдық төлем', ru: 'Коммунальные за 50 семей' },
+        { threshold: 1000000, icon: '🌟', kk: 'Мыңдаған өмірлер өзгереді!', ru: 'Меняются тысячи жизней!' }
+    ];
+    
+    function updatePowerCalculator(people) {
+        const daily = people;
+        const monthly = people * 30;
+        const yearly = people * 365;
+        
+        if (peopleCount) peopleCount.textContent = formatNumber(people);
+        if (powerDaily) powerDaily.textContent = formatNumber(daily) + '₸';
+        if (powerMonthly) powerMonthly.textContent = formatNumber(monthly) + '₸';
+        if (powerYearly) powerYearly.textContent = formatNumber(yearly) + '₸';
+        
+        // Find appropriate impact
+        let impact = impacts[0];
+        for (let i = impacts.length - 1; i >= 0; i--) {
+            if (people >= impacts[i].threshold) {
+                impact = impacts[i];
+                break;
+            }
+        }
+        
+        if (impactText) {
+            const lang = localStorage.getItem('1ge-lang') || 'kk';
+            const text = lang === 'ru' ? impact.ru : impact.kk;
+            impactText.textContent = text;
+            impactText.previousElementSibling.textContent = impact.icon;
+        }
+    }
+    
+    if (powerSlider) {
+        powerSlider.addEventListener('input', function() {
+            updatePowerCalculator(parseInt(this.value));
+        });
+        
+        // Initialize
+        updatePowerCalculator(parseInt(powerSlider.value));
+    }
+
+    // ========================================
     // Language Switcher
     // ========================================
     let currentLang = localStorage.getItem('1ge-lang') || 'kk';
