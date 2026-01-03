@@ -160,7 +160,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const powerMonthly = document.getElementById('power-monthly');
     const powerYearly = document.getElementById('power-yearly');
     const impactText = document.getElementById('impact-text');
-    
+
     const impacts = [
         { threshold: 100, icon: '🛒', kk: 'Бір отбасына азық-түлік', ru: 'Продукты для одной семьи' },
         { threshold: 1000, icon: '💊', kk: '10 адамға дәрі-дәрмек', ru: 'Лекарства для 10 человек' },
@@ -169,17 +169,17 @@ document.addEventListener('DOMContentLoaded', function () {
         { threshold: 500000, icon: '🏠', kk: '50 отбасына коммуналдық төлем', ru: 'Коммунальные за 50 семей' },
         { threshold: 1000000, icon: '🌟', kk: 'Мыңдаған өмірлер өзгереді!', ru: 'Меняются тысячи жизней!' }
     ];
-    
+
     function updatePowerCalculator(people) {
         const daily = people;
         const monthly = people * 30;
         const yearly = people * 365;
-        
+
         if (peopleCount) peopleCount.textContent = formatNumber(people);
         if (powerDaily) powerDaily.textContent = formatNumber(daily) + '₸';
         if (powerMonthly) powerMonthly.textContent = formatNumber(monthly) + '₸';
         if (powerYearly) powerYearly.textContent = formatNumber(yearly) + '₸';
-        
+
         // Find appropriate impact
         let impact = impacts[0];
         for (let i = impacts.length - 1; i >= 0; i--) {
@@ -188,7 +188,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 break;
             }
         }
-        
+
         if (impactText) {
             const lang = localStorage.getItem('1ge-lang') || 'kk';
             const text = lang === 'ru' ? impact.ru : impact.kk;
@@ -196,12 +196,12 @@ document.addEventListener('DOMContentLoaded', function () {
             impactText.previousElementSibling.textContent = impact.icon;
         }
     }
-    
+
     if (powerSlider) {
-        powerSlider.addEventListener('input', function() {
+        powerSlider.addEventListener('input', function () {
             updatePowerCalculator(parseInt(this.value));
         });
-        
+
         // Initialize
         updatePowerCalculator(parseInt(powerSlider.value));
     }
@@ -256,20 +256,10 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function updateCalculatorLanguage() {
-        const impactText = document.getElementById('impact-text');
-        if (impactText) {
-            const slider = document.getElementById('people-slider');
-            if (slider) {
-                const people = parseInt(slider.value);
-                const monthly = people * 30;
-                const families = Math.floor(monthly / 50000);
-
-                if (currentLang === 'kk') {
-                    impactText.innerHTML = `Бұл ақшамен айына <strong>${formatNumber(families)}</strong> отбасына көмектесуге болады!`;
-                } else {
-                    impactText.innerHTML = `На эти деньги можно помочь <strong>${formatNumber(families)}</strong> семьям в месяц!`;
-                }
-            }
+        // Update Power Calculator with current language
+        const slider = document.getElementById('power-slider');
+        if (slider) {
+            updatePowerCalculator(parseInt(slider.value));
         }
     }
 
@@ -693,42 +683,7 @@ document.addEventListener('DOMContentLoaded', function () {
         requestAnimationFrame(updateCounter);
     }
 
-    // ========================================
-    // Impact Calculator
-    // ========================================
-    const slider = document.getElementById('people-slider');
-    const peopleCount = document.getElementById('people-count');
-    const calcDaily = document.getElementById('calc-daily');
-    const calcMonthly = document.getElementById('calc-monthly');
-    const calcYearly = document.getElementById('calc-yearly');
-    const impactText = document.getElementById('impact-text');
-
-    function updateCalculator() {
-        if (!slider) return;
-
-        const people = parseInt(slider.value);
-        const daily = people;
-        const monthly = people * 30;
-        const yearly = people * 365;
-        const families = Math.floor(monthly / 50000); // 50k per family per month
-
-        if (peopleCount) peopleCount.textContent = formatNumber(people);
-        if (calcDaily) calcDaily.textContent = formatNumber(daily) + '₸';
-        if (calcMonthly) calcMonthly.textContent = formatNumber(monthly) + '₸';
-        if (calcYearly) calcYearly.textContent = formatNumber(yearly) + '₸';
-        if (impactText) {
-            if (currentLang === 'ru') {
-                impactText.innerHTML = `На эти деньги можно помочь <strong>${formatNumber(families)}</strong> семьям в месяц!`;
-            } else {
-                impactText.innerHTML = `Бұл ақшамен айына <strong>${formatNumber(families)}</strong> отбасына көмектесуге болады!`;
-            }
-        }
-    }
-
-    if (slider) {
-        slider.addEventListener('input', updateCalculator);
-        updateCalculator(); // Initial calculation
-    }
+    // Old Impact Calculator removed - replaced by Power Calculator above
 
     // ========================================
     // Parallax Effect for Hero Orbs
