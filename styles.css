@@ -627,8 +627,15 @@ body::before {
 }
 
 @keyframes pulse-bg {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.7; }
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.7;
+    }
 }
 
 .impact-icon {
@@ -656,23 +663,23 @@ body::before {
         grid-template-columns: 1fr;
         gap: var(--space-3);
     }
-    
+
     .power-card {
         display: flex;
         align-items: center;
         justify-content: space-between;
         padding: var(--space-3) var(--space-4);
     }
-    
+
     .power-icon {
         font-size: 1.5rem;
         margin-bottom: 0;
     }
-    
+
     .power-amount {
         font-size: var(--font-size-lg);
     }
-    
+
     .power-label {
         margin-top: 0;
     }
@@ -3106,5 +3113,167 @@ body::before {
 
     .calculator {
         padding: var(--space-6);
+    }
+}
+
+/* ========================================
+   Payment Coming Soon Modal
+   ======================================== */
+
+.payment-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.payment-modal.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.payment-modal-content {
+    background: linear-gradient(145deg, var(--color-bg-alt), var(--color-bg));
+    border: 2px solid var(--color-primary);
+    border-radius: var(--radius-2xl);
+    padding: var(--space-10);
+    max-width: 450px;
+    width: 90%;
+    text-align: center;
+    position: relative;
+    transform: scale(0.9) translateY(20px);
+    transition: transform 0.3s ease;
+    box-shadow: 0 25px 80px rgba(16, 185, 129, 0.3);
+}
+
+.payment-modal.active .payment-modal-content {
+    transform: scale(1) translateY(0);
+}
+
+.modal-close {
+    position: absolute;
+    top: var(--space-4);
+    right: var(--space-4);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--color-text-muted);
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.modal-close:hover {
+    background: rgba(239, 68, 68, 0.2);
+    color: #ef4444;
+}
+
+.modal-icon {
+    font-size: 4rem;
+    margin-bottom: var(--space-4);
+    animation: rocket-bounce 1s ease-in-out infinite;
+}
+
+@keyframes rocket-bounce {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+.modal-title {
+    font-size: var(--font-size-3xl);
+    font-weight: 800;
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: var(--space-4);
+}
+
+.modal-text {
+    font-size: var(--font-size-base);
+    color: var(--color-text-muted);
+    line-height: 1.7;
+    margin-bottom: var(--space-6);
+}
+
+.modal-features {
+    display: flex;
+    justify-content: center;
+    gap: var(--space-6);
+    margin-bottom: var(--space-6);
+}
+
+.modal-feature {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-2);
+}
+
+.modal-feature span:first-child {
+    font-size: 2rem;
+}
+
+.modal-feature span:last-child {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+}
+
+.modal-subscribe {
+    font-size: var(--font-size-sm);
+    color: var(--color-accent);
+    margin-bottom: var(--space-4);
+}
+
+.modal-btn {
+    width: 100%;
+}
+
+/* Light theme */
+[data-theme="light"] .payment-modal-content {
+    background: linear-gradient(145deg, #fff, #f0f8ff);
+    border-color: #00AFCA;
+}
+
+[data-theme="light"] .modal-title {
+    background: linear-gradient(135deg, #00AFCA, #FFD700);
+    -webkit-background-clip: text;
+    background-clip: text;
+}
+
+@media (max-width: 480px) {
+    .payment-modal-content {
+        padding: var(--space-6);
+    }
+
+    .modal-features {
+        flex-direction: column;
+        gap: var(--space-3);
+    }
+
+    .modal-feature {
+        flex-direction: row;
+        gap: var(--space-3);
     }
 }

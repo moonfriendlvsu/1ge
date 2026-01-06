@@ -796,4 +796,64 @@ document.addEventListener('DOMContentLoaded', function () {
             konamiIndex = 0;
         }
     });
+
+    // ========================================
+    // Payment Coming Soon Modal
+    // ========================================
+    const paymentModal = document.getElementById('payment-modal');
+    const paymentModalClose = document.getElementById('payment-modal-close');
+    const modalSubscribeBtn = document.getElementById('modal-subscribe-btn');
+
+    // All buttons that should open the payment modal
+    const paymentTriggers = document.querySelectorAll('.btn-primary.btn-large, .fab');
+
+    function openPaymentModal(e) {
+        // Only trigger for main donation buttons, not subscribe button inside modal
+        if (e && e.target.closest('#modal-subscribe-btn')) return;
+        if (e) e.preventDefault();
+        if (paymentModal) {
+            paymentModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+    }
+
+    function closePaymentModal() {
+        if (paymentModal) {
+            paymentModal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+    }
+
+    // Add click listeners to trigger buttons
+    paymentTriggers.forEach(btn => {
+        btn.addEventListener('click', openPaymentModal);
+    });
+
+    // Close modal on X button
+    if (paymentModalClose) {
+        paymentModalClose.addEventListener('click', closePaymentModal);
+    }
+
+    // Close modal on outside click
+    if (paymentModal) {
+        paymentModal.addEventListener('click', (e) => {
+            if (e.target === paymentModal) {
+                closePaymentModal();
+            }
+        });
+    }
+
+    // Close modal on Escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            closePaymentModal();
+        }
+    });
+
+    // Close modal and scroll to join when subscribe clicked
+    if (modalSubscribeBtn) {
+        modalSubscribeBtn.addEventListener('click', () => {
+            closePaymentModal();
+        });
+    }
 });
