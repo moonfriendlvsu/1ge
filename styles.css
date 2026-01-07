@@ -1802,9 +1802,11 @@ body::before {
 
 .stat-label {
     font-size: var(--font-size-sm);
-    opacity: 0.9;
     text-transform: uppercase;
     letter-spacing: 1px;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+    color: white;
+    font-weight: 600;
 }
 
 /* ========================================
