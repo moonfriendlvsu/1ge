@@ -1,34 +1,6 @@
 /* ========================================
-   1=GE Dashboard JavaScript with Firebase
+   1=GE Dashboard JavaScript - Simplified Auth
    ======================================== */
-
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-import {
-    getAuth,
-    onAuthStateChanged,
-    signOut
-} from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
-import {
-    getFirestore,
-    doc,
-    getDoc
-} from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
-
-// Firebase Configuration
-const firebaseConfig = {
-    apiKey: "AIzaSyDKmaJATjfIDfV7VJiISLb6qHp0y3Km4iw",
-    authDomain: "ge-company.firebaseapp.com",
-    projectId: "ge-company",
-    storageBucket: "ge-company.firebasestorage.app",
-    messagingSenderId: "845786400154",
-    appId: "1:845786400154:web:c170eda08b86a9876e2623",
-    measurementId: "G-XFP26ZDCJH"
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
 
 // ========================================
 // Language System
@@ -48,63 +20,25 @@ function setLanguage(lang) {
 setLanguage(currentLang);
 
 // ========================================
-// Check Authentication (with delay to let Firebase initialize)
+// Check Authentication via localStorage
 // ========================================
-let authCheckDone = false;
+const userDataString = localStorage.getItem('1ge-user');
 
-// Use a promise to wait for auth state to be determined
-const authReady = new Promise((resolve) => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-        if (!authCheckDone) {
-            authCheckDone = true;
-            unsubscribe(); // Stop listening after first real check
-            resolve(user);
-        }
-    });
-
-    // Fallback timeout - if auth takes too long, resolve with null
-    setTimeout(() => {
-        if (!authCheckDone) {
-            authCheckDone = true;
-            resolve(null);
-        }
-    }, 3000);
-});
-
-// Check auth and load user data
-authReady.then(async (user) => {
-    if (user) {
-        console.log('User logged in:', user.email);
-
-        // Try to get user data from Firestore
-        try {
-            const userDoc = await getDoc(doc(db, 'users', user.uid));
-            if (userDoc.exists()) {
-                const userData = userDoc.data();
-                updateDashboard(userData);
-            } else {
-                // User exists in Auth but not in Firestore - use Auth data
-                updateDashboard({
-                    name: user.displayName || 'Пайдаланушы',
-                    balance: 30000,
-                    verified: false
-                });
-            }
-        } catch (error) {
-            console.error('Firestore error (using default data):', error);
-            // Use default data if Firestore fails
-            updateDashboard({
-                name: user.displayName || 'Пайдаланушы',
-                balance: 30000,
-                verified: false
-            });
-        }
-    } else {
-        // Not logged in - redirect to login
-        console.log('User not logged in, redirecting...');
+if (!userDataString) {
+    // No user data - redirect to login
+    console.log('No user in localStorage, redirecting to login...');
+    window.location.href = 'login.html';
+} else {
+    // User exists - load dashboard
+    try {
+        const userData = JSON.parse(userDataString);
+        console.log('User found:', userData);
+        updateDashboard(userData);
+    } catch (e) {
+        console.error('Error parsing user data:', e);
         window.location.href = 'login.html';
     }
-});
+}
 
 // ========================================
 // Update Dashboard with User Data
@@ -127,27 +61,11 @@ function updateDashboard(userData) {
         userAvatar.textContent = initials;
     }
 
-    // Update balance
+    // Update balance (default 30000)
+    const balance = userData.balance || 30000;
     const balanceValue = document.querySelector('.balance-value');
-    if (balanceValue && userData.balance !== undefined) {
-        animateBalance(balanceValue, userData.balance);
-    }
-
-    // Update balance in header mini
-    const balanceMini = document.querySelector('.balance-mini');
-    if (balanceMini && userData.balance !== undefined) {
-        balanceMini.textContent = userData.balance.toLocaleString() + '₸';
-    }
-
-    // Update verification status
-    const userStatus = document.querySelector('.user-status');
-    if (userStatus) {
-        if (userData.verified) {
-            userStatus.textContent = currentLang === 'kk' ? '✓ Верификацияланған' : '✓ Верифицирован';
-        } else {
-            userStatus.textContent = currentLang === 'kk' ? '⏳ Тексеруде' : '⏳ На проверке';
-            userStatus.style.color = '#F59E0B';
-        }
+    if (balanceValue) {
+        animateBalance(balanceValue, balance);
     }
 
     console.log('Dashboard updated with user data:', userData);
@@ -200,26 +118,11 @@ if (userMenuBtn && userMenu) {
 // ========================================
 const logoutBtn = document.querySelector('.logout');
 if (logoutBtn) {
-    logoutBtn.addEventListener('click', async (e) => {
+    logoutBtn.addEventListener('click', (e) => {
         e.preventDefault();
-
-        try {
-            await signOut(auth);
-            localStorage.removeItem('1ge-user');
-            window.location.href = 'index.html';
-        } catch (error) {
-            console.error('Logout error:', error);
-        }
+        localStorage.removeItem('1ge-user');
+        window.location.href = 'index.html';
     });
 }
 
-// ========================================
-// Service Worker Update
-// ========================================
-if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.ready.then(registration => {
-        registration.update();
-    });
-}
-
-console.log('1=GE Dashboard loaded with Firebase');
+console.log('1=GE Dashboard loaded');
