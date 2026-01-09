@@ -2,6 +2,19 @@
    1=GE - JavaScript Ultra Edition
    ======================================== */
 
+// Register Service Worker for PWA
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+            .then(registration => {
+                console.log('1=GE: Service Worker registered', registration.scope);
+            })
+            .catch(error => {
+                console.log('1=GE: Service Worker registration failed', error);
+            });
+    });
+}
+
 document.addEventListener('DOMContentLoaded', function () {
 
     // ========================================
