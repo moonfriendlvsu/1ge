@@ -1,148 +1,314 @@
 /* ========================================
-   1=GE Authentication JavaScript
+   1=GE Authentication with Firebase
    ======================================== */
 
-document.addEventListener('DOMContentLoaded', function () {
+// Firebase imports (using CDN modules)
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+import {
+    getAuth,
+    createUserWithEmailAndPassword,
+    signInWithEmailAndPassword,
+    signOut,
+    onAuthStateChanged,
+    updateProfile
+} from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+import {
+    getFirestore,
+    doc,
+    setDoc,
+    getDoc
+} from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 
-    // ========================================
-    // Language Toggle
-    // ========================================
-    const langButtons = document.querySelectorAll('.lang-btn');
-    let currentLang = localStorage.getItem('1ge-lang') || 'kk';
+// Firebase Configuration
+const firebaseConfig = {
+    apiKey: "AIzaSyDKmaJATjfIDfV7VJiISLb6qHp0y3Km4iw",
+    authDomain: "ge-company.firebaseapp.com",
+    projectId: "ge-company",
+    storageBucket: "ge-company.firebasestorage.app",
+    messagingSenderId: "845786400154",
+    appId: "1:845786400154:web:c170eda08b86a9876e2623",
+    measurementId: "G-XFP26ZDCJH"
+};
 
-    function setLanguage(lang) {
-        currentLang = lang;
-        localStorage.setItem('1ge-lang', lang);
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
 
-        // Update button states
-        langButtons.forEach(btn => {
-            btn.classList.toggle('active', btn.dataset.lang === lang);
-        });
+// ========================================
+// Language System
+// ========================================
+let currentLang = localStorage.getItem('1ge-lang') || 'kk';
 
-        // Translate all elements
-        document.querySelectorAll('[data-kk][data-ru]').forEach(el => {
-            const text = el.getAttribute(`data-${lang}`);
-            if (text) {
-                el.innerHTML = text;
-            }
-        });
-    }
+const langButtons = document.querySelectorAll('.lang-btn');
 
-    // Initialize language
-    setLanguage(currentLang);
+function setLanguage(lang) {
+    currentLang = lang;
+    localStorage.setItem('1ge-lang', lang);
 
-    // Add click handlers
     langButtons.forEach(btn => {
-        btn.addEventListener('click', () => {
-            setLanguage(btn.dataset.lang);
-        });
+        btn.classList.toggle('active', btn.dataset.lang === lang);
     });
 
-    // ========================================
-    // Password Toggle
-    // ========================================
-    const togglePassword = document.getElementById('toggle-password');
-    const passwordInput = document.getElementById('password');
+    document.querySelectorAll('[data-kk][data-ru]').forEach(el => {
+        const text = el.getAttribute(`data-${lang}`);
+        if (text) {
+            el.innerHTML = text;
+        }
+    });
+}
 
-    if (togglePassword && passwordInput) {
-        togglePassword.addEventListener('click', () => {
-            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-            passwordInput.setAttribute('type', type);
-            togglePassword.textContent = type === 'password' ? '👁️' : '🙈';
-        });
+// Initialize language
+setLanguage(currentLang);
+
+langButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+        setLanguage(btn.dataset.lang);
+    });
+});
+
+// ========================================
+// Password Toggle
+// ========================================
+const togglePassword = document.getElementById('toggle-password');
+const passwordInput = document.getElementById('password');
+
+if (togglePassword && passwordInput) {
+    togglePassword.addEventListener('click', () => {
+        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordInput.setAttribute('type', type);
+        togglePassword.textContent = type === 'password' ? '👁️' : '🙈';
+    });
+}
+
+// ========================================
+// Phone Number Formatting
+// ========================================
+const phoneInput = document.getElementById('phone');
+if (phoneInput) {
+    phoneInput.addEventListener('input', (e) => {
+        let value = e.target.value.replace(/\D/g, '');
+        if (value.length > 0 && !value.startsWith('7')) {
+            value = '7' + value;
+        }
+        if (value.length > 11) {
+            value = value.slice(0, 11);
+        }
+        if (value.length > 0) {
+            let formatted = '+' + value.slice(0, 1);
+            if (value.length > 1) formatted += ' ' + value.slice(1, 4);
+            if (value.length > 4) formatted += ' ' + value.slice(4, 7);
+            if (value.length > 7) formatted += ' ' + value.slice(7, 11);
+            e.target.value = formatted;
+        }
+    });
+}
+
+// IIN validation
+const iinInput = document.getElementById('iin');
+if (iinInput) {
+    iinInput.addEventListener('input', (e) => {
+        e.target.value = e.target.value.replace(/\D/g, '').slice(0, 12);
+    });
+}
+
+// ========================================
+// Helper Functions
+// ========================================
+function showError(message) {
+    alert(message);
+}
+
+function setLoading(btn, isLoading) {
+    if (isLoading) {
+        btn.classList.add('btn-loading');
+        btn.disabled = true;
+    } else {
+        btn.classList.remove('btn-loading');
+        btn.disabled = false;
     }
+}
 
-    // ========================================
-    // Form Validation
-    // ========================================
-    const loginForm = document.getElementById('login-form');
-    const registerForm = document.getElementById('register-form');
+// Create email from phone number (Firebase requires email)
+function phoneToEmail(phone) {
+    const cleanPhone = phone.replace(/\D/g, '');
+    return `${cleanPhone}@1ge.kz`;
+}
 
-    // Phone number formatting
-    const phoneInput = document.getElementById('phone');
-    if (phoneInput) {
-        phoneInput.addEventListener('input', (e) => {
-            let value = e.target.value.replace(/\D/g, '');
-            if (value.length > 0 && !value.startsWith('7')) {
-                value = '7' + value;
+// ========================================
+// Login Form
+// ========================================
+const loginForm = document.getElementById('login-form');
+
+if (loginForm) {
+    loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const phone = document.getElementById('phone').value;
+        const password = document.getElementById('password').value;
+        const btn = loginForm.querySelector('button[type="submit"]');
+
+        if (!phone || !password) {
+            showError(currentLang === 'kk' ? 'Барлық өрістерді толтырыңыз' : 'Заполните все поля');
+            return;
+        }
+
+        setLoading(btn, true);
+
+        try {
+            const email = phoneToEmail(phone);
+            const userCredential = await signInWithEmailAndPassword(auth, email, password);
+
+            // Save user info to localStorage
+            localStorage.setItem('1ge-user', JSON.stringify({
+                uid: userCredential.user.uid,
+                phone: phone,
+                name: userCredential.user.displayName || 'Пайдаланушы'
+            }));
+
+            // Redirect to dashboard
+            window.location.href = 'dashboard.html';
+
+        } catch (error) {
+            console.error('Login error:', error);
+
+            let errorMessage = currentLang === 'kk'
+                ? 'Кіру қатесі. Телефон немесе құпия сөз дұрыс емес.'
+                : 'Ошибка входа. Неверный телефон или пароль.';
+
+            if (error.code === 'auth/user-not-found') {
+                errorMessage = currentLang === 'kk'
+                    ? 'Пайдаланушы табылмады. Тіркеліңіз.'
+                    : 'Пользователь не найден. Зарегистрируйтесь.';
+            } else if (error.code === 'auth/wrong-password') {
+                errorMessage = currentLang === 'kk'
+                    ? 'Құпия сөз дұрыс емес'
+                    : 'Неверный пароль';
             }
-            if (value.length > 11) {
-                value = value.slice(0, 11);
+
+            showError(errorMessage);
+            setLoading(btn, false);
+        }
+    });
+}
+
+// ========================================
+// Registration Form
+// ========================================
+const registerForm = document.getElementById('register-form');
+
+if (registerForm) {
+    registerForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const name = document.getElementById('name').value;
+        const phone = document.getElementById('phone').value;
+        const iin = document.getElementById('iin').value;
+        const password = document.getElementById('password').value;
+        const confirmPassword = document.getElementById('password-confirm').value;
+        const btn = registerForm.querySelector('button[type="submit"]');
+
+        // Validation
+        if (!name || !phone || !iin || !password || !confirmPassword) {
+            showError(currentLang === 'kk' ? 'Барлық өрістерді толтырыңыз' : 'Заполните все поля');
+            return;
+        }
+
+        if (password !== confirmPassword) {
+            showError(currentLang === 'kk' ? 'Құпия сөздер сәйкес емес!' : 'Пароли не совпадают!');
+            return;
+        }
+
+        if (password.length < 6) {
+            showError(currentLang === 'kk' ? 'Құпия сөз кемінде 6 таңба болуы керек' : 'Пароль должен быть минимум 6 символов');
+            return;
+        }
+
+        if (iin.length !== 12) {
+            showError(currentLang === 'kk' ? 'ИИН 12 сан болуы керек' : 'ИИН должен содержать 12 цифр');
+            return;
+        }
+
+        setLoading(btn, true);
+
+        try {
+            const email = phoneToEmail(phone);
+
+            // Create user in Firebase Auth
+            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+
+            // Update profile with name
+            await updateProfile(userCredential.user, {
+                displayName: name
+            });
+
+            // Save additional data to Firestore
+            await setDoc(doc(db, 'users', userCredential.user.uid), {
+                name: name,
+                phone: phone,
+                iin: iin,
+                balance: 30000, // Starting balance
+                verified: false,
+                createdAt: new Date().toISOString()
+            });
+
+            // Save to localStorage
+            localStorage.setItem('1ge-user', JSON.stringify({
+                uid: userCredential.user.uid,
+                phone: phone,
+                name: name
+            }));
+
+            // Redirect to dashboard
+            window.location.href = 'dashboard.html';
+
+        } catch (error) {
+            console.error('Registration error:', error);
+
+            let errorMessage = currentLang === 'kk'
+                ? 'Тіркелу қатесі. Қайталап көріңіз.'
+                : 'Ошибка регистрации. Попробуйте ещё раз.';
+
+            if (error.code === 'auth/email-already-in-use') {
+                errorMessage = currentLang === 'kk'
+                    ? 'Бұл телефон нөмірі тіркелген'
+                    : 'Этот номер телефона уже зарегистрирован';
+            } else if (error.code === 'auth/weak-password') {
+                errorMessage = currentLang === 'kk'
+                    ? 'Құпия сөз тым қарапайым'
+                    : 'Пароль слишком простой';
             }
-            // Format as +7 XXX XXX XXXX
-            if (value.length > 0) {
-                let formatted = '+' + value.slice(0, 1);
-                if (value.length > 1) formatted += ' ' + value.slice(1, 4);
-                if (value.length > 4) formatted += ' ' + value.slice(4, 7);
-                if (value.length > 7) formatted += ' ' + value.slice(7, 11);
-                e.target.value = formatted;
-            }
-        });
-    }
 
-    // IIN validation (12 digits)
-    const iinInput = document.getElementById('iin');
-    if (iinInput) {
-        iinInput.addEventListener('input', (e) => {
-            e.target.value = e.target.value.replace(/\D/g, '').slice(0, 12);
-        });
-    }
+            showError(errorMessage);
+            setLoading(btn, false);
+        }
+    });
+}
 
-    // Login form submission
-    if (loginForm) {
-        loginForm.addEventListener('submit', (e) => {
-            e.preventDefault();
+// ========================================
+// Kaspi Login (Demo - Not implemented)
+// ========================================
+const kaspiBtn = document.querySelector('.kaspi-btn');
+if (kaspiBtn) {
+    kaspiBtn.addEventListener('click', () => {
+        alert(currentLang === 'kk' ? 'Kaspi қосылым әлі дайын емес' : 'Интеграция с Kaspi в разработке');
+    });
+}
 
-            const btn = loginForm.querySelector('button[type="submit"]');
-            btn.classList.add('btn-loading');
-
-            // Simulate login (replace with real API call)
-            setTimeout(() => {
-                btn.classList.remove('btn-loading');
-                // Redirect to dashboard
-                window.location.href = 'dashboard.html';
-            }, 1500);
-        });
-    }
-
-    // Register form submission
-    if (registerForm) {
-        registerForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-
-            const password = document.getElementById('password').value;
-            const confirmPassword = document.getElementById('password-confirm').value;
-
-            if (password !== confirmPassword) {
-                alert(currentLang === 'kk' ? 'Құпия сөздер сәйкес емес!' : 'Пароли не совпадают!');
-                return;
-            }
-
-            const btn = registerForm.querySelector('button[type="submit"]');
-            btn.classList.add('btn-loading');
-
-            // Simulate registration (replace with real API call)
-            setTimeout(() => {
-                btn.classList.remove('btn-loading');
-                // Redirect to dashboard
-                window.location.href = 'dashboard.html';
-            }, 1500);
-        });
-    }
-
-    // ========================================
-    // Kaspi Login (Demo)
-    // ========================================
-    const kaspiBtn = document.querySelector('.kaspi-btn');
-    if (kaspiBtn) {
-        kaspiBtn.addEventListener('click', () => {
-            kaspiBtn.classList.add('btn-loading');
-
-            setTimeout(() => {
-                kaspiBtn.classList.remove('btn-loading');
-                // In real app, this would open Kaspi OAuth
-                alert(currentLang === 'kk' ? 'Kaspi қосылым әлі дайын емес' : 'Интеграция с Kaspi в разработке');
-            }, 1000);
-        });
+// ========================================
+// Check Auth State
+// ========================================
+onAuthStateChanged(auth, (user) => {
+    if (user) {
+        console.log('User logged in:', user.email);
+    } else {
+        console.log('User not logged in');
     }
 });
+
+// Export for use in other files
+window.firebaseAuth = {
+    auth,
+    db,
+    signOut: () => signOut(auth)
+};
