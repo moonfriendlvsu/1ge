@@ -48,21 +48,56 @@ function setLanguage(lang) {
 setLanguage(currentLang);
 
 // ========================================
-// Check Authentication
+// Check Authentication (with delay to let Firebase initialize)
 // ========================================
-onAuthStateChanged(auth, async (user) => {
+let authCheckDone = false;
+
+// Use a promise to wait for auth state to be determined
+const authReady = new Promise((resolve) => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+        if (!authCheckDone) {
+            authCheckDone = true;
+            unsubscribe(); // Stop listening after first real check
+            resolve(user);
+        }
+    });
+
+    // Fallback timeout - if auth takes too long, resolve with null
+    setTimeout(() => {
+        if (!authCheckDone) {
+            authCheckDone = true;
+            resolve(null);
+        }
+    }, 3000);
+});
+
+// Check auth and load user data
+authReady.then(async (user) => {
     if (user) {
         console.log('User logged in:', user.email);
 
-        // Get user data from Firestore
+        // Try to get user data from Firestore
         try {
             const userDoc = await getDoc(doc(db, 'users', user.uid));
             if (userDoc.exists()) {
                 const userData = userDoc.data();
                 updateDashboard(userData);
+            } else {
+                // User exists in Auth but not in Firestore - use Auth data
+                updateDashboard({
+                    name: user.displayName || 'Пайдаланушы',
+                    balance: 30000,
+                    verified: false
+                });
             }
         } catch (error) {
-            console.error('Error fetching user data:', error);
+            console.error('Firestore error (using default data):', error);
+            // Use default data if Firestore fails
+            updateDashboard({
+                name: user.displayName || 'Пайдаланушы',
+                balance: 30000,
+                verified: false
+            });
         }
     } else {
         // Not logged in - redirect to login
@@ -98,6 +133,12 @@ function updateDashboard(userData) {
         animateBalance(balanceValue, userData.balance);
     }
 
+    // Update balance in header mini
+    const balanceMini = document.querySelector('.balance-mini');
+    if (balanceMini && userData.balance !== undefined) {
+        balanceMini.textContent = userData.balance.toLocaleString() + '₸';
+    }
+
     // Update verification status
     const userStatus = document.querySelector('.user-status');
     if (userStatus) {
@@ -108,6 +149,8 @@ function updateDashboard(userData) {
             userStatus.style.color = '#F59E0B';
         }
     }
+
+    console.log('Dashboard updated with user data:', userData);
 }
 
 // ========================================
