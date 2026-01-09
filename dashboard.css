@@ -369,6 +369,22 @@
     background: rgba(16, 185, 129, 0.05);
 }
 
+.transaction-empty {
+    text-align: center;
+    padding: 2rem;
+    color: var(--color-text-muted);
+}
+
+.transaction-empty span {
+    font-size: 2.5rem;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.transaction-empty p {
+    font-size: 0.875rem;
+}
+
 /* ========================================
    Help Banner
    ======================================== */

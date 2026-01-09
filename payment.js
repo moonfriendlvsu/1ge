@@ -1,5 +1,5 @@
 /* ========================================
-   1=GE Payment JavaScript
+   1=GE Payment JavaScript - Real Balance System
    ======================================== */
 
 // ========================================
@@ -16,7 +16,42 @@ function setLanguage(lang) {
 
 document.addEventListener('DOMContentLoaded', () => {
     setLanguage(currentLang);
+    updateBalanceDisplay();
 });
+
+// ========================================
+// Get User Data
+// ========================================
+function getUserData() {
+    const userData = localStorage.getItem('1ge-user');
+    if (userData) {
+        return JSON.parse(userData);
+    }
+    return { balance: 30000, name: 'Пайдаланушы' };
+}
+
+function saveUserData(data) {
+    localStorage.setItem('1ge-user', JSON.stringify(data));
+}
+
+function getTransactions() {
+    const transactions = localStorage.getItem('1ge-transactions');
+    return transactions ? JSON.parse(transactions) : [];
+}
+
+function saveTransaction(transaction) {
+    const transactions = getTransactions();
+    transactions.unshift(transaction); // Add to beginning
+    localStorage.setItem('1ge-transactions', JSON.stringify(transactions));
+}
+
+function updateBalanceDisplay() {
+    const userData = getUserData();
+    const balanceMini = document.querySelector('.balance-mini');
+    if (balanceMini) {
+        balanceMini.textContent = userData.balance.toLocaleString() + '₸';
+    }
+}
 
 // ========================================
 // Search & Filter
@@ -72,14 +107,29 @@ const summaryAmount = document.getElementById('summary-amount');
 const summaryTotal = document.getElementById('summary-total');
 
 let selectedService = '';
+let selectedIcon = '';
 
 function showPaymentForm(serviceName, icon) {
     event.preventDefault();
 
     selectedService = serviceName;
+    selectedIcon = icon;
+
     if (modalIcon) modalIcon.textContent = icon;
     if (modalServiceName) modalServiceName.textContent = serviceName;
     if (summaryService) summaryService.textContent = serviceName;
+
+    // Update available balance hint
+    const userData = getUserData();
+    const amountHint = document.querySelector('.amount-hint');
+    if (amountHint) {
+        amountHint.textContent = `Қолжетімді: ${userData.balance.toLocaleString()}₸`;
+    }
+
+    // Update max amount
+    if (amountInput) {
+        amountInput.max = userData.balance;
+    }
 
     if (payModal) payModal.classList.add('active');
     document.body.style.overflow = 'hidden';
@@ -107,7 +157,7 @@ function updateSummary() {
 }
 
 // ========================================
-// Process Payment
+// Process Payment - REAL BALANCE UPDATE
 // ========================================
 const successModal = document.getElementById('success-modal');
 
@@ -115,10 +165,22 @@ function processPayment(event) {
     event.preventDefault();
 
     const amount = parseInt(amountInput.value);
-    const balance = 30000; // Demo balance
+    const accountNumber = accountInput.value;
+    const userData = getUserData();
 
-    if (amount > balance) {
+    // Validation
+    if (!amount || amount <= 0) {
+        alert(currentLang === 'kk' ? 'Сома енгізіңіз' : 'Введите сумму');
+        return;
+    }
+
+    if (amount > userData.balance) {
         alert(currentLang === 'kk' ? 'Жеткіліксіз қаражат!' : 'Недостаточно средств!');
+        return;
+    }
+
+    if (!accountNumber) {
+        alert(currentLang === 'kk' ? 'Шот нөмірін енгізіңіз' : 'Введите номер счета');
         return;
     }
 
@@ -129,6 +191,26 @@ function processPayment(event) {
 
     // Simulate payment processing
     setTimeout(() => {
+        // Deduct from balance
+        userData.balance -= amount;
+        saveUserData(userData);
+
+        // Save transaction
+        const transaction = {
+            id: Date.now(),
+            service: selectedService,
+            icon: selectedIcon,
+            amount: amount,
+            accountNumber: accountNumber,
+            date: new Date().toISOString(),
+            type: 'payment'
+        };
+        saveTransaction(transaction);
+
+        console.log('Payment processed:', transaction);
+        console.log('New balance:', userData.balance);
+
+        // Close payment modal
         closePaymentModal();
 
         // Show success
@@ -156,3 +238,10 @@ document.addEventListener('keydown', (e) => {
         closePaymentModal();
     }
 });
+
+// Make functions globally available
+window.showPaymentForm = showPaymentForm;
+window.closePaymentModal = closePaymentModal;
+window.processPayment = processPayment;
+
+console.log('Payment system loaded with real balance tracking');
