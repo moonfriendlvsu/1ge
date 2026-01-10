@@ -1,5 +1,6 @@
 /* ========================================
    1=GE Payment JavaScript - Real Balance System
+   Fixed: UI sync + persistent storage
    ======================================== */
 
 // ========================================
@@ -31,7 +32,15 @@ function getUserData() {
 }
 
 function saveUserData(data) {
+    // Save to current session
     localStorage.setItem('1ge-user', JSON.stringify(data));
+
+    // Also update in users database for persistence
+    const users = JSON.parse(localStorage.getItem('1ge-users') || '{}');
+    if (data.phone && users[data.phone]) {
+        users[data.phone].balance = data.balance;
+        localStorage.setItem('1ge-users', JSON.stringify(users));
+    }
 }
 
 function getTransactions() {
@@ -47,9 +56,17 @@ function saveTransaction(transaction) {
 
 function updateBalanceDisplay() {
     const userData = getUserData();
+
+    // Update mini balance in header
     const balanceMini = document.querySelector('.balance-mini');
     if (balanceMini) {
         balanceMini.textContent = userData.balance.toLocaleString() + '₸';
+    }
+
+    // Update amount hint
+    const amountHint = document.querySelector('.amount-hint');
+    if (amountHint) {
+        amountHint.textContent = `Қолжетімді: ${userData.balance.toLocaleString()}₸`;
     }
 }
 
@@ -109,8 +126,8 @@ const summaryTotal = document.getElementById('summary-total');
 let selectedService = '';
 let selectedIcon = '';
 
-function showPaymentForm(serviceName, icon) {
-    event.preventDefault();
+function showPaymentForm(event, serviceName, icon) {
+    if (event) event.preventDefault();
 
     selectedService = serviceName;
     selectedIcon = icon;
@@ -209,6 +226,9 @@ function processPayment(event) {
 
         console.log('Payment processed:', transaction);
         console.log('New balance:', userData.balance);
+
+        // Update UI immediately
+        updateBalanceDisplay();
 
         // Close payment modal
         closePaymentModal();

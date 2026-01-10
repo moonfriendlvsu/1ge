@@ -47,7 +47,7 @@
             <!-- Store List -->
             <div class="service-list" id="service-list">
                 <a href="#" class="service-item" data-category="supermarket"
-                    onclick="showPaymentForm('Magnum Cash&Carry', '🛒')">
+                    onclick="showPaymentForm(event, 'Magnum Cash&Carry', '🛒')">
                     <div class="service-icon">🛒</div>
                     <div class="service-info">
                         <span class="service-name">Magnum Cash&Carry</span>
@@ -56,7 +56,8 @@
                     <span class="service-arrow">→</span>
                 </a>
 
-                <a href="#" class="service-item" data-category="supermarket" onclick="showPaymentForm('Small', '🏪')">
+                <a href="#" class="service-item" data-category="supermarket"
+                    onclick="showPaymentForm(event, 'Small', '🏪')">
                     <div class="service-icon">🏪</div>
                     <div class="service-info">
                         <span class="service-name">Small</span>
@@ -65,7 +66,8 @@
                     <span class="service-arrow">→</span>
                 </a>
 
-                <a href="#" class="service-item" data-category="supermarket" onclick="showPaymentForm('Anvar', '🛍️')">
+                <a href="#" class="service-item" data-category="supermarket"
+                    onclick="showPaymentForm(event, 'Anvar', '🛍️')">
                     <div class="service-icon">🛍️</div>
                     <div class="service-info">
                         <span class="service-name">Anvar</span>
@@ -75,7 +77,7 @@
                 </a>
 
                 <a href="#" class="service-item" data-category="supermarket"
-                    onclick="showPaymentForm('Ramstore', '🏬')">
+                    onclick="showPaymentForm(event, 'Ramstore', '🏬')">
                     <div class="service-icon">🏬</div>
                     <div class="service-info">
                         <span class="service-name">Ramstore</span>
@@ -85,7 +87,7 @@
                 </a>
 
                 <a href="#" class="service-item" data-category="market"
-                    onclick="showPaymentForm('Алтын Орда базары', '🧺')">
+                    onclick="showPaymentForm(event, 'Алтын Орда базары', '🧺')">
                     <div class="service-icon">🧺</div>
                     <div class="service-info">
                         <span class="service-name">Алтын Орда базары</span>
@@ -95,7 +97,7 @@
                 </a>
 
                 <a href="#" class="service-item" data-category="market"
-                    onclick="showPaymentForm('Зеленый базар', '🥬')">
+                    onclick="showPaymentForm(event, 'Зеленый базар', '🥬')">
                     <div class="service-icon">🥬</div>
                     <div class="service-info">
                         <span class="service-name">Зеленый базар</span>
