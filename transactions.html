@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="kk">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Транзакциялар — 1=GE</title>
+
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="apple-touch-icon" href="favicon.png">
+    <meta name="theme-color" content="#10B981">
+    <link rel="manifest" href="manifest.json">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="dashboard.css">
+    <link rel="stylesheet" href="transactions.css">
+</head>
+
+<body class="dashboard-body">
+    <!-- Header -->
+    <header class="tx-header">
+        <a href="dashboard.html" class="back-btn">← Артқа</a>
+        <h1 data-kk="Транзакциялар" data-ru="Транзакции">Транзакциялар</h1>
+        <div class="header-spacer"></div>
+    </header>
+
+    <!-- Main -->
+    <main class="tx-main">
+        <div class="tx-container">
+
+            <!-- Search -->
+            <div class="search-box">
+                <span class="search-icon">🔍</span>
+                <input type="text" placeholder="Іздеу..." id="tx-search" data-kk-placeholder="Іздеу..."
+                    data-ru-placeholder="Поиск...">
+            </div>
+
+            <!-- Filters -->
+            <div class="tx-filters">
+                <button class="filter-btn active" data-filter="all" data-kk="Барлығы" data-ru="Все">Барлығы</button>
+                <button class="filter-btn" data-filter="utilities" data-kk="Коммуналдық"
+                    data-ru="Коммунальные">Коммуналдық</button>
+                <button class="filter-btn" data-filter="groceries" data-kk="Азық-түлік"
+                    data-ru="Продукты">Азық-түлік</button>
+                <button class="filter-btn" data-filter="pharmacy" data-kk="Дәріхана" data-ru="Аптека">Дәріхана</button>
+            </div>
+
+            <!-- Summary -->
+            <div class="tx-summary">
+                <div class="summary-stat">
+                    <span class="summary-label" data-kk="Барлық транзакциялар" data-ru="Всего транзакций">Барлық
+                        транзакциялар</span>
+                    <span class="summary-value" id="total-count">0</span>
+                </div>
+                <div class="summary-stat">
+                    <span class="summary-label" data-kk="Жалпы сома" data-ru="Общая сумма">Жалпы сома</span>
+                    <span class="summary-value" id="total-amount">0₸</span>
+                </div>
+            </div>
+
+            <!-- Transaction List -->
+            <div class="tx-list" id="tx-list">
+                <!-- Transactions will be loaded dynamically -->
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <a href="dashboard.html" class="nav-item">
+            <span class="nav-icon">🏠</span>
+            <span data-kk="Басты" data-ru="Главная">Басты</span>
+        </a>
+        <a href="pay-utilities.html" class="nav-item">
+            <span class="nav-icon">💳</span>
+            <span data-kk="Төлемдер" data-ru="Платежи">Төлемдер</span>
+        </a>
+        <a href="transactions.html" class="nav-item active">
+            <span class="nav-icon">📊</span>
+            <span data-kk="Тарих" data-ru="История">Тарих</span>
+        </a>
+        <a href="profile.html" class="nav-item">
+            <span class="nav-icon">👤</span>
+            <span data-kk="Профиль" data-ru="Профиль">Профиль</span>
+        </a>
+    </nav>
+
+    <script src="transactions.js"></script>
+</body>
+
+</html>

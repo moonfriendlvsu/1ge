@@ -198,3 +198,148 @@ if (logoutBtn) {
 }
 
 console.log('1=GE Dashboard loaded with real balance system');
+
+// ========================================
+// Expense Chart (Chart.js)
+// ========================================
+let expenseChart = null;
+
+function initExpenseChart() {
+    const ctx = document.getElementById('expense-chart');
+    const legendContainer = document.getElementById('chart-legend');
+    
+    if (!ctx || !legendContainer) return;
+    
+    const transactions = getTransactions();
+    
+    if (transactions.length === 0) {
+        // Show empty state
+        const chartContainer = ctx.parentElement;
+        chartContainer.innerHTML = `
+            <div class="chart-empty">
+                <span>📊</span>
+                <p data-kk="Шығындар жоқ" data-ru="Нет расходов">Шығындар жоқ</p>
+            </div>
+        `;
+        legendContainer.innerHTML = '';
+        return;
+    }
+    
+    // Calculate spending by category
+    const categories = {
+        'Коммуналдық': { total: 0, color: '#10B981', icon: '🏠' },
+        'Азық-түлік': { total: 0, color: '#0EA5E9', icon: '🛒' },
+        'Дәріхана': { total: 0, color: '#F59E0B', icon: '💊' },
+        'Басқа': { total: 0, color: '#8B5CF6', icon: '💳' }
+    };
+    
+    // Map service names to categories
+    const categoryMapping = {
+        // Utilities
+        'Алматы Энерго Сбыт': 'Коммуналдық',
+        'ҚазТрансГаз': 'Коммуналдық',
+        'Алматы Су': 'Коммуналдық',
+        'Алатау Жылу': 'Коммуналдық',
+        'Орал Энерго': 'Коммуналдық',
+        'Шымкент Энерго': 'Коммуналдық',
+        'КарагандыЖылуСбыт': 'Коммуналдық',
+        'Астана Энерго': 'Коммуналдық',
+        // Groceries
+        'Magnum': 'Азық-түлік',
+        'Small Market': 'Азық-түлік',
+        'Арзан': 'Азық-түлік',
+        'Анвар': 'Азық-түлік',
+        // Pharmacy
+        'Europharma': 'Дәріхана',
+        'Sadykhan': 'Дәріхана',
+        'Pharma Plus': 'Дәріхана'
+    };
+    
+    transactions.forEach(tx => {
+        if (tx.type !== 'refill') {
+            const category = categoryMapping[tx.service] || 'Басқа';
+            categories[category].total += tx.amount;
+        }
+    });
+    
+    // Filter out empty categories
+    const activeCategories = Object.entries(categories).filter(([, data]) => data.total > 0);
+    
+    if (activeCategories.length === 0) {
+        const chartContainer = ctx.parentElement;
+        chartContainer.innerHTML = `
+            <div class="chart-empty">
+                <span>📊</span>
+                <p data-kk="Шығындар жоқ" data-ru="Нет расходов">Шығындар жоқ</p>
+            </div>
+        `;
+        legendContainer.innerHTML = '';
+        return;
+    }
+    
+    const labels = activeCategories.map(([name]) => name);
+    const data = activeCategories.map(([, cat]) => cat.total);
+    const colors = activeCategories.map(([, cat]) => cat.color);
+    
+    // Destroy existing chart if any
+    if (expenseChart) {
+        expenseChart.destroy();
+    }
+    
+    // Create doughnut chart
+    expenseChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: labels,
+            datasets: [{
+                data: data,
+                backgroundColor: colors,
+                borderColor: '#0A0A0A',
+                borderWidth: 3,
+                hoverOffset: 10
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                    titleColor: '#fff',
+                    bodyColor: '#fff',
+                    padding: 12,
+                    callbacks: {
+                        label: function(context) {
+                            return context.parsed.toLocaleString() + '₸';
+                        }
+                    }
+                }
+            },
+            cutout: '65%'
+        }
+    });
+    
+    // Build custom legend
+    legendContainer.innerHTML = activeCategories.map(([name, cat]) => `
+        <div class="legend-item">
+            <div class="legend-color" style="background: ${cat.color}"></div>
+            <span>${cat.icon} ${name}</span>
+            <span class="legend-value">${cat.total.toLocaleString()}₸</span>
+        </div>
+    `).join('');
+}
+
+// Period buttons
+document.querySelectorAll('.period-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        // Could add period filtering here if needed
+    });
+});
+
+// Initialize chart when page loads
+document.addEventListener('DOMContentLoaded', initExpenseChart);

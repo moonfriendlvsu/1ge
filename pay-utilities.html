@@ -159,13 +159,48 @@
         </div>
     </div>
 
-    <!-- Success Modal -->
-    <div class="success-modal" id="success-modal">
-        <div class="success-content">
-            <div class="success-icon">✅</div>
-            <h2>Төлем сәтті!</h2>
-            <p>Транзакция аяқталды</p>
-            <a href="dashboard.html" class="btn btn-primary">Жеке кабинетке оралу</a>
+    <!-- Receipt Modal -->
+    <div class="receipt-modal" id="success-modal">
+        <div class="receipt-content">
+            <div class="receipt-header">
+                <div class="receipt-logo">
+                    <span class="logo-1">1</span><span class="logo-eq">=</span><span class="logo-ge">GE</span>
+                </div>
+                <div class="receipt-check">✓</div>
+            </div>
+
+            <h2 class="receipt-title" data-kk="Төлем сәтті!" data-ru="Оплата успешна!">Төлем сәтті!</h2>
+            <p class="receipt-subtitle" data-kk="Транзакция аяқталды" data-ru="Транзакция завершена">Транзакция аяқталды
+            </p>
+
+            <div class="receipt-details">
+                <div class="receipt-row">
+                    <span data-kk="Қызмет" data-ru="Услуга">Қызмет</span>
+                    <span id="receipt-service">-</span>
+                </div>
+                <div class="receipt-row">
+                    <span data-kk="Шот нөмірі" data-ru="Номер счета">Шот нөмірі</span>
+                    <span id="receipt-account">-</span>
+                </div>
+                <div class="receipt-row">
+                    <span data-kk="Күні" data-ru="Дата">Күні</span>
+                    <span id="receipt-date">-</span>
+                </div>
+                <div class="receipt-row total">
+                    <span data-kk="Сома" data-ru="Сумма">Сома</span>
+                    <span id="receipt-amount">-</span>
+                </div>
+            </div>
+
+            <div class="receipt-id">
+                <span data-kk="Транзакция ID:" data-ru="ID транзакции:">Транзакция ID:</span>
+                <span id="receipt-tx-id">-</span>
+            </div>
+
+            <div class="receipt-actions">
+                <a href="dashboard.html" class="btn btn-primary btn-full" data-kk="Жеке кабинетке оралу"
+                    data-ru="Вернуться в кабинет">Жеке кабинетке оралу</a>
+            </div>
         </div>
     </div>
 

@@ -233,7 +233,10 @@ function processPayment(event) {
         // Close payment modal
         closePaymentModal();
 
-        // Show success
+        // Populate receipt
+        populateReceipt(transaction);
+
+        // Show receipt
         if (successModal) {
             successModal.classList.add('active');
         }
@@ -241,6 +244,31 @@ function processPayment(event) {
         submitBtn.classList.remove('btn-loading');
         submitBtn.disabled = false;
     }, 2000);
+}
+
+// Populate receipt with transaction data
+function populateReceipt(transaction) {
+    const receiptService = document.getElementById('receipt-service');
+    const receiptAccount = document.getElementById('receipt-account');
+    const receiptDate = document.getElementById('receipt-date');
+    const receiptAmount = document.getElementById('receipt-amount');
+    const receiptTxId = document.getElementById('receipt-tx-id');
+
+    if (receiptService) receiptService.textContent = transaction.service;
+    if (receiptAccount) receiptAccount.textContent = transaction.accountNumber;
+
+    if (receiptDate) {
+        const date = new Date(transaction.date);
+        const day = date.getDate();
+        const months = currentLang === 'kk'
+            ? ['қаңтар', 'ақпан', 'наурыз', 'сәуір', 'мамыр', 'маусым', 'шілде', 'тамыз', 'қыркүйек', 'қазан', 'қараша', 'желтоқсан']
+            : ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
+        const time = date.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+        receiptDate.textContent = `${day} ${months[date.getMonth()]}, ${time}`;
+    }
+
+    if (receiptAmount) receiptAmount.textContent = transaction.amount.toLocaleString() + '₸';
+    if (receiptTxId) receiptTxId.textContent = transaction.id;
 }
 
 // Close modal on outside click

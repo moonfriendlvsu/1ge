@@ -18,6 +18,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="dashboard.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 </head>
 
 <body class="dashboard-body">
@@ -79,6 +80,22 @@
                 </div>
             </section>
 
+            <!-- Expense Chart -->
+            <section class="expense-chart-section">
+                <div class="chart-header">
+                    <h2 class="section-title-sm" data-kk="Шығындар" data-ru="Расходы">Шығындар</h2>
+                    <div class="chart-period">
+                        <button class="period-btn active" data-period="week" data-kk="Апта"
+                            data-ru="Неделя">Апта</button>
+                        <button class="period-btn" data-period="month" data-kk="Ай" data-ru="Месяц">Ай</button>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="expense-chart"></canvas>
+                </div>
+                <div class="chart-legend" id="chart-legend"></div>
+            </section>
+
             <!-- Quick Actions -->
             <section class="quick-actions">
                 <h2 class="section-title-sm" data-kk="Төлем түрлері" data-ru="Виды оплаты">Төлем түрлері</h2>
@@ -112,7 +129,8 @@
                 <div class="transactions-header">
                     <h2 class="section-title-sm" data-kk="Соңғы транзакциялар" data-ru="Последние транзакции">Соңғы
                         транзакциялар</h2>
-                    <a href="#" class="view-all" data-kk="Барлығын көру" data-ru="Смотреть все">Барлығын көру →</a>
+                    <a href="transactions.html" class="view-all" data-kk="Барлығын көру" data-ru="Смотреть все">Барлығын
+                        көру →</a>
                 </div>
 
                 <div class="transactions-list">
@@ -140,15 +158,15 @@
             <span class="nav-icon">🏠</span>
             <span data-kk="Басты" data-ru="Главная">Басты</span>
         </a>
-        <a href="#" class="nav-item">
+        <a href="pay-utilities.html" class="nav-item">
             <span class="nav-icon">💳</span>
             <span data-kk="Төлемдер" data-ru="Платежи">Төлемдер</span>
         </a>
-        <a href="#" class="nav-item">
+        <a href="transactions.html" class="nav-item">
             <span class="nav-icon">📊</span>
             <span data-kk="Тарих" data-ru="История">Тарих</span>
         </a>
-        <a href="#" class="nav-item">
+        <a href="profile.html" class="nav-item">
             <span class="nav-icon">👤</span>
             <span data-kk="Профиль" data-ru="Профиль">Профиль</span>
         </a>

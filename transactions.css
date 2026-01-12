@@ -1,0 +1,235 @@
+/* ========================================
+   1=GE Transactions Page Styles
+   ======================================== */
+
+/* Header */
+.tx-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background: rgba(10, 10, 10, 0.95);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1rem;
+    z-index: 1000;
+}
+
+.tx-header h1 {
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.header-spacer {
+    width: 60px;
+}
+
+/* Main */
+.tx-main {
+    padding-top: 80px;
+    padding-bottom: calc(var(--dash-nav-height) + 2rem);
+}
+
+.tx-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 0 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+/* Search */
+.search-box {
+    position: relative;
+}
+
+.search-icon {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1rem;
+}
+
+.search-box input {
+    width: 100%;
+    padding: 0.875rem 1rem 0.875rem 2.75rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.75rem;
+    color: var(--color-text);
+    font-size: 0.875rem;
+}
+
+.search-box input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+}
+
+/* Filters */
+.tx-filters {
+    display: flex;
+    gap: 0.5rem;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+    scrollbar-width: none;
+}
+
+.tx-filters::-webkit-scrollbar {
+    display: none;
+}
+
+.filter-btn {
+    padding: 0.5rem 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 2rem;
+    color: var(--color-text-muted);
+    font-size: 0.75rem;
+    font-weight: 500;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.filter-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.filter-btn.active {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: white;
+}
+
+/* Summary */
+.tx-summary {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+}
+
+.summary-stat {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 1rem;
+    padding: 1rem;
+    text-align: center;
+}
+
+.summary-label {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    margin-bottom: 0.25rem;
+}
+
+.summary-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-primary);
+}
+
+/* Transaction List */
+.tx-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.tx-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 0.75rem;
+    transition: all 0.2s;
+}
+
+.tx-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.tx-icon {
+    font-size: 1.5rem;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 0.75rem;
+}
+
+.tx-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.tx-service {
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+.tx-date {
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+}
+
+.tx-account {
+    font-size: 0.7rem;
+    color: var(--color-text-muted);
+    font-family: monospace;
+}
+
+.tx-amount {
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.tx-amount.negative {
+    color: #ef4444;
+}
+
+.tx-amount.positive {
+    color: var(--color-primary);
+}
+
+/* Empty State */
+.tx-empty {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: var(--color-text-muted);
+}
+
+.tx-empty span {
+    font-size: 3rem;
+    display: block;
+    margin-bottom: 1rem;
+}
+
+.tx-empty p {
+    font-size: 0.875rem;
+}
+
+/* Date Group */
+.tx-date-group {
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    padding: 0.5rem 0;
+    margin-top: 0.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.tx-date-group:first-child {
+    margin-top: 0;
+}
