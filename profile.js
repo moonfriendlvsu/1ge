@@ -1,6 +1,20 @@
 /* ========================================
-   1=GE Profile JavaScript
+   1=GE Profile - Firebase Backend
    ======================================== */
+
+// Firebase imports
+import {
+    auth,
+    db,
+    onAuthStateChanged,
+    signOut,
+    doc,
+    getDoc,
+    collection,
+    query,
+    where,
+    getDocs
+} from './firebase-config.js';
 
 // Language System
 let currentLang = localStorage.getItem('1ge-lang') || 'kk';
@@ -33,26 +47,43 @@ document.querySelectorAll('.lang-btn').forEach(btn => {
     });
 });
 
-// Get User Data
-function getUserData() {
-    const userData = localStorage.getItem('1ge-user');
-    return userData ? JSON.parse(userData) : null;
-}
+// Global state
+let currentUser = null;
+let userProfile = null;
 
-function getTransactions() {
-    const transactions = localStorage.getItem('1ge-transactions');
-    return transactions ? JSON.parse(transactions) : [];
-}
+// Check Authentication with Firebase
+onAuthStateChanged(auth, async (user) => {
+    if (user) {
+        currentUser = user;
+        console.log('Profile page - User authenticated:', user.email);
 
-// Check Authentication
-const userData = getUserData();
+        try {
+            const userDoc = await getDoc(doc(db, 'users', user.uid));
+            if (userDoc.exists()) {
+                userProfile = userDoc.data();
+                userProfile.uid = user.uid;
+                userProfile.email = user.email;
 
-if (!userData) {
-    window.location.href = 'login.html';
-} else {
-    loadProfile(userData);
-    loadStats();
-}
+                loadProfile(userProfile);
+                loadStats();
+            } else {
+                console.error('No user profile found');
+                window.location.href = 'login.html';
+            }
+        } catch (error) {
+            console.error('Error loading user profile:', error);
+            // Fall back to cache
+            const cached = localStorage.getItem('1ge-user');
+            if (cached) {
+                userProfile = JSON.parse(cached);
+                loadProfile(userProfile);
+            }
+        }
+    } else {
+        console.log('No user, redirecting to login...');
+        window.location.href = 'login.html';
+    }
+});
 
 // Load Profile Data
 function loadProfile(userData) {
@@ -73,15 +104,13 @@ function loadProfile(userData) {
     if (profileName && userData.name) profileName.textContent = userData.name;
     if (infoName && userData.name) infoName.textContent = userData.name;
 
-    // Update phone (partially masked)
+    // Update email
     const infoPhone = document.getElementById('info-phone');
-    if (infoPhone && userData.phone) {
-        const phone = userData.phone;
-        const masked = phone.slice(0, 4) + ' XXX XX ' + phone.slice(-2);
-        infoPhone.textContent = '+7 ' + masked;
+    if (infoPhone && userData.email) {
+        infoPhone.textContent = userData.email;
     }
 
-    // Update IIN (fully masked for security)
+    // Update IIN (partially masked for security)
     const infoIin = document.getElementById('info-iin');
     if (infoIin && userData.iin) {
         const iin = userData.iin;
@@ -92,42 +121,93 @@ function loadProfile(userData) {
     // Registration date
     const infoDate = document.getElementById('info-date');
     if (infoDate) {
-        const date = new Date();
+        let regDate;
+        if (userData.createdAt) {
+            regDate = new Date(userData.createdAt);
+        } else {
+            regDate = new Date();
+        }
+
         const months = currentLang === 'kk'
             ? ['қаңтар', 'ақпан', 'наурыз', 'сәуір', 'мамыр', 'маусым', 'шілде', 'тамыз', 'қыркүйек', 'қазан', 'қараша', 'желтоқсан']
             : ['январь', 'февраль', 'март', 'апрель', 'май', 'июнь', 'июль', 'август', 'сентябрь', 'октябрь', 'ноябрь', 'декабрь'];
-        infoDate.textContent = `${months[date.getMonth()]} 2026`;
+        infoDate.textContent = `${months[regDate.getMonth()]} ${regDate.getFullYear()}`;
     }
 }
 
-// Load Stats
-function loadStats() {
-    const transactions = getTransactions();
-
-    // Transaction count
+// Load Stats from Firestore
+async function loadStats() {
     const statTransactions = document.getElementById('stat-transactions');
-    if (statTransactions) {
-        statTransactions.textContent = transactions.length;
+    const statSpent = document.getElementById('stat-spent');
+
+    if (!currentUser) {
+        // Use cached data
+        const cached = localStorage.getItem('1ge-transactions');
+        const transactions = cached ? JSON.parse(cached) : [];
+
+        if (statTransactions) statTransactions.textContent = transactions.length;
+        if (statSpent) {
+            const totalSpent = transactions
+                .filter(tx => tx.type !== 'refill')
+                .reduce((sum, tx) => sum + tx.amount, 0);
+            statSpent.textContent = totalSpent.toLocaleString() + '₸';
+        }
+        return;
     }
 
-    // Total spent
-    const statSpent = document.getElementById('stat-spent');
-    if (statSpent) {
-        const totalSpent = transactions
-            .filter(tx => tx.type !== 'refill')
-            .reduce((sum, tx) => sum + tx.amount, 0);
-        statSpent.textContent = totalSpent.toLocaleString() + '₸';
+    try {
+        // Query transactions from Firestore
+        const q = query(
+            collection(db, 'transactions'),
+            where('userId', '==', currentUser.uid)
+        );
+
+        const snapshot = await getDocs(q);
+        const transactions = [];
+
+        snapshot.forEach(doc => {
+            transactions.push(doc.data());
+        });
+
+        // Update stats
+        if (statTransactions) {
+            statTransactions.textContent = transactions.length;
+        }
+
+        if (statSpent) {
+            const totalSpent = transactions
+                .filter(tx => tx.type !== 'refill')
+                .reduce((sum, tx) => sum + tx.amount, 0);
+            statSpent.textContent = totalSpent.toLocaleString() + '₸';
+        }
+
+        console.log('Stats loaded:', transactions.length, 'transactions');
+
+    } catch (error) {
+        console.error('Error loading stats:', error);
+        // Fall back to cached values
+        if (statTransactions) statTransactions.textContent = '0';
+        if (statSpent) statSpent.textContent = '0₸';
     }
 }
 
-// Logout
+// Logout with Firebase
 const logoutBtn = document.getElementById('logout-btn');
 if (logoutBtn) {
-    logoutBtn.addEventListener('click', () => {
-        localStorage.removeItem('1ge-user');
-        localStorage.removeItem('1ge-transactions');
-        window.location.href = 'index.html';
+    logoutBtn.addEventListener('click', async () => {
+        try {
+            await signOut(auth);
+            localStorage.removeItem('1ge-user');
+            localStorage.removeItem('1ge-transactions');
+            console.log('User signed out');
+            window.location.href = 'index.html';
+        } catch (error) {
+            console.error('Logout error:', error);
+            // Force redirect anyway
+            localStorage.removeItem('1ge-user');
+            window.location.href = 'index.html';
+        }
     });
 }
 
-console.log('1=GE Profile page loaded');
+console.log('1=GE Profile loaded (Firebase mode)');

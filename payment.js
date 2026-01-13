@@ -1,7 +1,19 @@
 /* ========================================
-   1=GE Payment JavaScript - Real Balance System
-   Fixed: UI sync + persistent storage
+   1=GE Payment - Firebase Firestore Backend
    ======================================== */
+
+// Firebase imports
+import {
+    auth,
+    db,
+    onAuthStateChanged,
+    doc,
+    getDoc,
+    updateDoc,
+    collection,
+    addDoc,
+    serverTimestamp
+} from './firebase-config.js';
 
 // ========================================
 // Language System
@@ -15,58 +27,83 @@ function setLanguage(lang) {
     });
 }
 
+// ========================================
+// Global State
+// ========================================
+let currentUser = null;
+let userProfile = null;
+let selectedService = '';
+let selectedIcon = '';
+
+// ========================================
+// Initialize on Auth State Change
+// ========================================
+onAuthStateChanged(auth, async (user) => {
+    if (user) {
+        currentUser = user;
+        console.log('Payment page - User authenticated:', user.email);
+
+        try {
+            const userDoc = await getDoc(doc(db, 'users', user.uid));
+            if (userDoc.exists()) {
+                userProfile = userDoc.data();
+                userProfile.uid = user.uid;
+
+                // Update local cache
+                localStorage.setItem('1ge-user', JSON.stringify({
+                    uid: user.uid,
+                    email: user.email,
+                    name: userProfile.name,
+                    balance: userProfile.balance
+                }));
+
+                updateBalanceDisplay();
+            }
+        } catch (error) {
+            console.error('Error loading user profile:', error);
+            // Fall back to cache
+            const cached = localStorage.getItem('1ge-user');
+            if (cached) {
+                userProfile = JSON.parse(cached);
+                updateBalanceDisplay();
+            }
+        }
+    } else {
+        console.log('No user, redirecting to login...');
+        window.location.href = 'login.html';
+    }
+});
+
 document.addEventListener('DOMContentLoaded', () => {
     setLanguage(currentLang);
-    updateBalanceDisplay();
+
+    // Try to show cached balance immediately
+    const cached = localStorage.getItem('1ge-user');
+    if (cached) {
+        userProfile = JSON.parse(cached);
+        updateBalanceDisplay();
+    }
 });
 
 // ========================================
-// Get User Data
+// Balance Display
 // ========================================
-function getUserData() {
-    const userData = localStorage.getItem('1ge-user');
-    if (userData) {
-        return JSON.parse(userData);
-    }
-    return { balance: 30000, name: 'Пайдаланушы' };
-}
-
-function saveUserData(data) {
-    // Save to current session
-    localStorage.setItem('1ge-user', JSON.stringify(data));
-
-    // Also update in users database for persistence
-    const users = JSON.parse(localStorage.getItem('1ge-users') || '{}');
-    if (data.phone && users[data.phone]) {
-        users[data.phone].balance = data.balance;
-        localStorage.setItem('1ge-users', JSON.stringify(users));
-    }
-}
-
-function getTransactions() {
-    const transactions = localStorage.getItem('1ge-transactions');
-    return transactions ? JSON.parse(transactions) : [];
-}
-
-function saveTransaction(transaction) {
-    const transactions = getTransactions();
-    transactions.unshift(transaction); // Add to beginning
-    localStorage.setItem('1ge-transactions', JSON.stringify(transactions));
-}
-
 function updateBalanceDisplay() {
-    const userData = getUserData();
+    if (!userProfile) return;
+
+    const balance = userProfile.balance || 0;
 
     // Update mini balance in header
     const balanceMini = document.querySelector('.balance-mini');
     if (balanceMini) {
-        balanceMini.textContent = userData.balance.toLocaleString() + '₸';
+        balanceMini.textContent = balance.toLocaleString() + '₸';
     }
 
     // Update amount hint
     const amountHint = document.querySelector('.amount-hint');
     if (amountHint) {
-        amountHint.textContent = `Қолжетімді: ${userData.balance.toLocaleString()}₸`;
+        const label = currentLang === 'kk' ? 'Қолжетімді' : 'Доступно';
+        amountHint.textContent = `${label}: ${balance.toLocaleString()}₸`;
     }
 }
 
@@ -123,9 +160,6 @@ const summaryService = document.getElementById('summary-service');
 const summaryAmount = document.getElementById('summary-amount');
 const summaryTotal = document.getElementById('summary-total');
 
-let selectedService = '';
-let selectedIcon = '';
-
 function showPaymentForm(event, serviceName, icon) {
     if (event) event.preventDefault();
 
@@ -137,15 +171,16 @@ function showPaymentForm(event, serviceName, icon) {
     if (summaryService) summaryService.textContent = serviceName;
 
     // Update available balance hint
-    const userData = getUserData();
-    const amountHint = document.querySelector('.amount-hint');
-    if (amountHint) {
-        amountHint.textContent = `Қолжетімді: ${userData.balance.toLocaleString()}₸`;
-    }
-
-    // Update max amount
-    if (amountInput) {
-        amountInput.max = userData.balance;
+    if (userProfile) {
+        const balance = userProfile.balance || 0;
+        const amountHint = document.querySelector('.amount-hint');
+        if (amountHint) {
+            const label = currentLang === 'kk' ? 'Қолжетімді' : 'Доступно';
+            amountHint.textContent = `${label}: ${balance.toLocaleString()}₸`;
+        }
+        if (amountInput) {
+            amountInput.max = balance;
+        }
     }
 
     if (payModal) payModal.classList.add('active');
@@ -174,16 +209,15 @@ function updateSummary() {
 }
 
 // ========================================
-// Process Payment - REAL BALANCE UPDATE
+// Process Payment - FIREBASE BACKEND
 // ========================================
 const successModal = document.getElementById('success-modal');
 
-function processPayment(event) {
+async function processPayment(event) {
     event.preventDefault();
 
     const amount = parseInt(amountInput.value);
     const accountNumber = accountInput.value;
-    const userData = getUserData();
 
     // Validation
     if (!amount || amount <= 0) {
@@ -191,7 +225,7 @@ function processPayment(event) {
         return;
     }
 
-    if (amount > userData.balance) {
+    if (!userProfile || amount > userProfile.balance) {
         alert(currentLang === 'kk' ? 'Жеткіліксіз қаражат!' : 'Недостаточно средств!');
         return;
     }
@@ -201,49 +235,84 @@ function processPayment(event) {
         return;
     }
 
+    if (!currentUser) {
+        alert(currentLang === 'kk' ? 'Қате! Авторизация қажет' : 'Ошибка! Требуется авторизация');
+        window.location.href = 'login.html';
+        return;
+    }
+
     // Show loading state
     const submitBtn = document.querySelector('#pay-form button[type="submit"]');
     submitBtn.classList.add('btn-loading');
     submitBtn.disabled = true;
 
-    // Simulate payment processing
-    setTimeout(() => {
-        // Deduct from balance
-        userData.balance -= amount;
-        saveUserData(userData);
+    try {
+        const newBalance = userProfile.balance - amount;
+        const txDate = new Date().toISOString();
 
-        // Save transaction
-        const transaction = {
-            id: Date.now(),
+        // 1. Update balance in Firestore
+        await updateDoc(doc(db, 'users', currentUser.uid), {
+            balance: newBalance
+        });
+
+        // 2. Add transaction to Firestore
+        const txRef = await addDoc(collection(db, 'transactions'), {
+            userId: currentUser.uid,
+            userEmail: currentUser.email,
             service: selectedService,
             icon: selectedIcon,
             amount: amount,
             accountNumber: accountNumber,
-            date: new Date().toISOString(),
+            date: txDate,
+            type: 'payment',
+            createdAt: serverTimestamp()
+        });
+
+        const transaction = {
+            id: txRef.id,
+            service: selectedService,
+            icon: selectedIcon,
+            amount: amount,
+            accountNumber: accountNumber,
+            date: txDate,
             type: 'payment'
         };
-        saveTransaction(transaction);
 
-        console.log('Payment processed:', transaction);
-        console.log('New balance:', userData.balance);
+        console.log('Payment saved to Firestore:', transaction);
+        console.log('New balance:', newBalance);
 
-        // Update UI immediately
+        // 3. Update local state
+        userProfile.balance = newBalance;
+        localStorage.setItem('1ge-user', JSON.stringify({
+            uid: currentUser.uid,
+            email: currentUser.email,
+            name: userProfile.name,
+            balance: newBalance
+        }));
+
+        // Update cached transactions
+        const cachedTx = JSON.parse(localStorage.getItem('1ge-transactions') || '[]');
+        cachedTx.unshift(transaction);
+        localStorage.setItem('1ge-transactions', JSON.stringify(cachedTx));
+
+        // 4. Update UI
         updateBalanceDisplay();
-
-        // Close payment modal
         closePaymentModal();
-
-        // Populate receipt
         populateReceipt(transaction);
 
-        // Show receipt
         if (successModal) {
             successModal.classList.add('active');
         }
 
+    } catch (error) {
+        console.error('Payment error:', error);
+        alert(currentLang === 'kk'
+            ? 'Төлем қатесі. Қайта көріңіз.'
+            : 'Ошибка оплаты. Попробуйте снова.');
+    } finally {
         submitBtn.classList.remove('btn-loading');
         submitBtn.disabled = false;
-    }, 2000);
+    }
 }
 
 // Populate receipt with transaction data
@@ -287,9 +356,9 @@ document.addEventListener('keydown', (e) => {
     }
 });
 
-// Make functions globally available
+// Make functions globally available for onclick handlers
 window.showPaymentForm = showPaymentForm;
 window.closePaymentModal = closePaymentModal;
 window.processPayment = processPayment;
 
-console.log('Payment system loaded with real balance tracking');
+console.log('1=GE Payment loaded (Firebase mode)');

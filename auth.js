@@ -1,32 +1,91 @@
 /* ========================================
-   1=GE Authentication - Simplified (No Firebase)
-   Demo version using localStorage
+   1=GE Authentication with Firebase
+   Real backend with Firebase Auth & Firestore
    ======================================== */
 
+// Firebase imports (using ES modules via CDN)
+import {
+    auth,
+    db,
+    createUserWithEmailAndPassword,
+    signInWithEmailAndPassword,
+    signOut,
+    sendPasswordResetEmail,
+    doc,
+    setDoc,
+    getDoc
+} from './firebase-config.js';
+
+// ========================================
+// Language System
+// ========================================
+let currentLang = localStorage.getItem('1ge-lang') || 'kk';
+
+function setLanguage(lang) {
+    currentLang = lang;
+    localStorage.setItem('1ge-lang', lang);
+
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.lang === lang);
+    });
+
+    document.querySelectorAll('[data-kk][data-ru]').forEach(el => {
+        const text = el.getAttribute(`data-${lang}`);
+        if (text) {
+            el.innerHTML = text;
+        }
+    });
+}
+
+// ========================================
+// Error Messages
+// ========================================
+function getErrorMessage(errorCode) {
+    const messages = {
+        'auth/email-already-in-use': {
+            kk: 'Бұл email тіркелген',
+            ru: 'Этот email уже зарегистрирован'
+        },
+        'auth/invalid-email': {
+            kk: 'Email дұрыс емес',
+            ru: 'Неверный формат email'
+        },
+        'auth/weak-password': {
+            kk: 'Құпия сөз тым қысқа (мин. 6 таңба)',
+            ru: 'Пароль слишком короткий (мин. 6 символов)'
+        },
+        'auth/user-not-found': {
+            kk: 'Пайдаланушы табылмады',
+            ru: 'Пользователь не найден'
+        },
+        'auth/wrong-password': {
+            kk: 'Құпия сөз дұрыс емес',
+            ru: 'Неверный пароль'
+        },
+        'auth/invalid-credential': {
+            kk: 'Email немесе құпия сөз дұрыс емес',
+            ru: 'Неверный email или пароль'
+        },
+        'auth/too-many-requests': {
+            kk: 'Тым көп әрекет. Кейінірек қайталаңыз',
+            ru: 'Слишком много попыток. Попробуйте позже'
+        }
+    };
+
+    const msg = messages[errorCode];
+    if (msg) {
+        return msg[currentLang] || msg.ru;
+    }
+    return currentLang === 'kk' ? 'Қате орын алды' : 'Произошла ошибка';
+}
+
+// ========================================
+// Initialize on DOM Ready
+// ========================================
 document.addEventListener('DOMContentLoaded', function () {
 
-    // ========================================
-    // Language System
-    // ========================================
+    // Initialize language
     const langButtons = document.querySelectorAll('.lang-btn');
-    let currentLang = localStorage.getItem('1ge-lang') || 'kk';
-
-    function setLanguage(lang) {
-        currentLang = lang;
-        localStorage.setItem('1ge-lang', lang);
-
-        langButtons.forEach(btn => {
-            btn.classList.toggle('active', btn.dataset.lang === lang);
-        });
-
-        document.querySelectorAll('[data-kk][data-ru]').forEach(el => {
-            const text = el.getAttribute(`data-${lang}`);
-            if (text) {
-                el.innerHTML = text;
-            }
-        });
-    }
-
     setLanguage(currentLang);
 
     langButtons.forEach(btn => {
@@ -49,29 +108,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // ========================================
-    // Phone Number Formatting
-    // ========================================
-    const phoneInput = document.getElementById('phone');
-    if (phoneInput) {
-        phoneInput.addEventListener('input', (e) => {
-            let value = e.target.value.replace(/\D/g, '');
-            if (value.length > 0 && !value.startsWith('7')) {
-                value = '7' + value;
-            }
-            if (value.length > 11) {
-                value = value.slice(0, 11);
-            }
-            if (value.length > 0) {
-                let formatted = '+' + value.slice(0, 1);
-                if (value.length > 1) formatted += ' ' + value.slice(1, 4);
-                if (value.length > 4) formatted += ' ' + value.slice(4, 7);
-                if (value.length > 7) formatted += ' ' + value.slice(7, 11);
-                e.target.value = formatted;
-            }
-        });
-    }
-
     // IIN validation
     const iinInput = document.getElementById('iin');
     if (iinInput) {
@@ -81,19 +117,19 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // ========================================
-    // Login Form (Demo - localStorage only)
+    // Login Form - Firebase Auth
     // ========================================
     const loginForm = document.getElementById('login-form');
 
     if (loginForm) {
-        loginForm.addEventListener('submit', (e) => {
+        loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
 
-            const phone = document.getElementById('phone').value;
+            const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             const btn = loginForm.querySelector('button[type="submit"]');
 
-            if (!phone || !password) {
+            if (!email || !password) {
                 alert(currentLang === 'kk' ? 'Барлық өрістерді толтырыңыз' : 'Заполните все поля');
                 return;
             }
@@ -101,52 +137,53 @@ document.addEventListener('DOMContentLoaded', function () {
             btn.classList.add('btn-loading');
             btn.disabled = true;
 
-            // Demo: Get user from localStorage or create session
-            setTimeout(() => {
-                const users = JSON.parse(localStorage.getItem('1ge-users') || '{}');
-                const cleanPhone = phone.replace(/\D/g, '');
+            try {
+                // Sign in with Firebase
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
 
-                if (users[cleanPhone]) {
-                    if (users[cleanPhone].password === password) {
-                        // Login successful
-                        localStorage.setItem('1ge-user', JSON.stringify({
-                            phone: cleanPhone,
-                            name: users[cleanPhone].name,
-                            balance: users[cleanPhone].balance || 30000
-                        }));
-                        window.location.href = 'dashboard.html';
-                    } else {
-                        alert(currentLang === 'kk' ? 'Құпия сөз дұрыс емес' : 'Неверный пароль');
-                        btn.classList.remove('btn-loading');
-                        btn.disabled = false;
-                    }
-                } else {
-                    alert(currentLang === 'kk' ? 'Пайдаланушы табылмады. Тіркеліңіз.' : 'Пользователь не найден. Зарегистрируйтесь.');
-                    btn.classList.remove('btn-loading');
-                    btn.disabled = false;
-                }
-            }, 1000);
+                // Get user data from Firestore
+                const userDoc = await getDoc(doc(db, 'users', user.uid));
+                const userData = userDoc.exists() ? userDoc.data() : {};
+
+                // Store user info locally for quick access
+                localStorage.setItem('1ge-user', JSON.stringify({
+                    uid: user.uid,
+                    email: user.email,
+                    name: userData.name || 'Пайдаланушы',
+                    balance: userData.balance || 30000
+                }));
+
+                console.log('Login successful:', user.email);
+                window.location.href = 'dashboard.html';
+
+            } catch (error) {
+                console.error('Login error:', error);
+                alert(getErrorMessage(error.code));
+                btn.classList.remove('btn-loading');
+                btn.disabled = false;
+            }
         });
     }
 
     // ========================================
-    // Registration Form (Demo - localStorage only)
+    // Registration Form - Firebase Auth
     // ========================================
     const registerForm = document.getElementById('register-form');
 
     if (registerForm) {
-        registerForm.addEventListener('submit', (e) => {
+        registerForm.addEventListener('submit', async (e) => {
             e.preventDefault();
 
             const name = document.getElementById('name').value;
-            const phone = document.getElementById('phone').value;
+            const email = document.getElementById('email').value;
             const iin = document.getElementById('iin').value;
             const password = document.getElementById('password').value;
             const confirmPassword = document.getElementById('password-confirm').value;
             const btn = registerForm.querySelector('button[type="submit"]');
 
             // Validation
-            if (!name || !phone || !iin || !password || !confirmPassword) {
+            if (!name || !email || !iin || !password || !confirmPassword) {
                 alert(currentLang === 'kk' ? 'Барлық өрістерді толтырыңыз' : 'Заполните все поля');
                 return;
             }
@@ -169,45 +206,69 @@ document.addEventListener('DOMContentLoaded', function () {
             btn.classList.add('btn-loading');
             btn.disabled = true;
 
-            setTimeout(() => {
-                const cleanPhone = phone.replace(/\D/g, '');
+            try {
+                // Create user in Firebase Auth
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
 
-                // Save user to localStorage
-                const users = JSON.parse(localStorage.getItem('1ge-users') || '{}');
-
-                if (users[cleanPhone]) {
-                    alert(currentLang === 'kk' ? 'Бұл телефон нөмірі тіркелген' : 'Этот номер уже зарегистрирован');
-                    btn.classList.remove('btn-loading');
-                    btn.disabled = false;
-                    return;
-                }
-
-                users[cleanPhone] = {
+                // Save user profile to Firestore
+                await setDoc(doc(db, 'users', user.uid), {
                     name: name,
-                    phone: cleanPhone,
+                    email: email,
                     iin: iin,
-                    password: password,
                     balance: 30000,
                     createdAt: new Date().toISOString()
-                };
+                });
 
-                localStorage.setItem('1ge-users', JSON.stringify(users));
-
-                // Auto-login after registration
+                // Store user info locally
                 localStorage.setItem('1ge-user', JSON.stringify({
-                    phone: cleanPhone,
+                    uid: user.uid,
+                    email: user.email,
                     name: name,
                     balance: 30000
                 }));
 
-                console.log('User registered and logged in:', name);
+                console.log('User registered:', user.email);
                 window.location.href = 'dashboard.html';
-            }, 1000);
+
+            } catch (error) {
+                console.error('Registration error:', error);
+                alert(getErrorMessage(error.code));
+                btn.classList.remove('btn-loading');
+                btn.disabled = false;
+            }
         });
     }
 
     // ========================================
-    // Kaspi Login (Demo)
+    // Forgot Password
+    // ========================================
+    const forgotLink = document.querySelector('.forgot-link');
+    if (forgotLink) {
+        forgotLink.addEventListener('click', async (e) => {
+            e.preventDefault();
+
+            const email = document.getElementById('email')?.value;
+
+            if (!email) {
+                alert(currentLang === 'kk' ? 'Email енгізіңіз' : 'Введите email');
+                return;
+            }
+
+            try {
+                await sendPasswordResetEmail(auth, email);
+                alert(currentLang === 'kk'
+                    ? 'Құпия сөзді қалпына келтіру сілтемесі жіберілді'
+                    : 'Ссылка для сброса пароля отправлена на email');
+            } catch (error) {
+                console.error('Password reset error:', error);
+                alert(getErrorMessage(error.code));
+            }
+        });
+    }
+
+    // ========================================
+    // Kaspi Login (Demo - not implemented)
     // ========================================
     const kaspiBtn = document.querySelector('.kaspi-btn');
     if (kaspiBtn) {
@@ -216,5 +277,10 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    console.log('1=GE Auth loaded (demo mode)');
+    console.log('1=GE Auth loaded (Firebase mode)');
 });
+
+// ========================================
+// Export for use in other pages
+// ========================================
+export { auth, db, signOut, currentLang };

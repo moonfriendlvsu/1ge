@@ -1,6 +1,22 @@
 /* ========================================
-   1=GE Dashboard - Real Balance & Transactions
+   1=GE Dashboard - Firebase Firestore Backend
    ======================================== */
+
+// Firebase imports
+import {
+    auth,
+    db,
+    onAuthStateChanged,
+    signOut,
+    doc,
+    getDoc,
+    collection,
+    query,
+    where,
+    orderBy,
+    limit,
+    getDocs
+} from './firebase-config.js';
 
 // ========================================
 // Theme System
@@ -10,7 +26,6 @@ document.documentElement.setAttribute('data-theme', savedTheme);
 
 const themeToggle = document.getElementById('theme-toggle');
 if (themeToggle) {
-    // Set initial icon
     themeToggle.textContent = savedTheme === 'dark' ? '🌙' : '☀️';
 
     themeToggle.addEventListener('click', function () {
@@ -41,34 +56,55 @@ function setLanguage(lang) {
 setLanguage(currentLang);
 
 // ========================================
-// Get User & Transaction Data
+// Global state
 // ========================================
-function getUserData() {
-    const userData = localStorage.getItem('1ge-user');
-    if (userData) {
-        return JSON.parse(userData);
+let currentUser = null;
+let userProfile = null;
+let expenseChart = null;
+
+// ========================================
+// Check Authentication with Firebase
+// ========================================
+onAuthStateChanged(auth, async (user) => {
+    if (user) {
+        currentUser = user;
+        console.log('User authenticated:', user.email);
+
+        // Get user profile from Firestore
+        try {
+            const userDoc = await getDoc(doc(db, 'users', user.uid));
+            if (userDoc.exists()) {
+                userProfile = userDoc.data();
+                console.log('User profile loaded:', userProfile);
+
+                // Update local cache
+                localStorage.setItem('1ge-user', JSON.stringify({
+                    uid: user.uid,
+                    email: user.email,
+                    name: userProfile.name,
+                    balance: userProfile.balance
+                }));
+
+                updateDashboard(userProfile);
+                loadTransactions();
+            } else {
+                console.error('No user profile found');
+                window.location.href = 'login.html';
+            }
+        } catch (error) {
+            console.error('Error loading user profile:', error);
+            // Fall back to local cache
+            const cached = localStorage.getItem('1ge-user');
+            if (cached) {
+                userProfile = JSON.parse(cached);
+                updateDashboard(userProfile);
+            }
+        }
+    } else {
+        console.log('No authenticated user, redirecting to login...');
+        window.location.href = 'login.html';
     }
-    return null;
-}
-
-function getTransactions() {
-    const transactions = localStorage.getItem('1ge-transactions');
-    return transactions ? JSON.parse(transactions) : [];
-}
-
-// ========================================
-// Check Authentication
-// ========================================
-const userData = getUserData();
-
-if (!userData) {
-    console.log('No user in localStorage, redirecting to login...');
-    window.location.href = 'login.html';
-} else {
-    console.log('User found:', userData);
-    updateDashboard(userData);
-    loadTransactions();
-}
+});
 
 // ========================================
 // Update Dashboard with User Data
@@ -113,19 +149,69 @@ function updateDashboard(userData) {
 }
 
 // ========================================
-// Load Real Transactions
+// Load Transactions from Firestore
 // ========================================
-function loadTransactions() {
-    const transactions = getTransactions();
+async function loadTransactions() {
     const transactionsList = document.querySelector('.transactions-list');
-
     if (!transactionsList) return;
 
-    // Clear existing transactions
+    // Show loading state
+    transactionsList.innerHTML = `
+        <div class="transaction-empty">
+            <span>⏳</span>
+            <p>Жүктелуде...</p>
+        </div>
+    `;
+
+    try {
+        if (!currentUser) {
+            throw new Error('No authenticated user');
+        }
+
+        // Query transactions from Firestore
+        const q = query(
+            collection(db, 'transactions'),
+            where('userId', '==', currentUser.uid),
+            orderBy('date', 'desc'),
+            limit(10)
+        );
+
+        const snapshot = await getDocs(q);
+        const transactions = [];
+
+        snapshot.forEach(doc => {
+            transactions.push({ id: doc.id, ...doc.data() });
+        });
+
+        console.log('Loaded transactions:', transactions.length);
+
+        // Cache transactions locally
+        localStorage.setItem('1ge-transactions', JSON.stringify(transactions));
+
+        renderTransactions(transactions);
+        initExpenseChart(transactions);
+
+    } catch (error) {
+        console.error('Error loading transactions:', error);
+
+        // Fall back to local cache
+        const cached = localStorage.getItem('1ge-transactions');
+        const transactions = cached ? JSON.parse(cached) : [];
+        renderTransactions(transactions);
+        initExpenseChart(transactions);
+    }
+}
+
+// ========================================
+// Render Transactions List
+// ========================================
+function renderTransactions(transactions) {
+    const transactionsList = document.querySelector('.transactions-list');
+    if (!transactionsList) return;
+
     transactionsList.innerHTML = '';
 
     if (transactions.length === 0) {
-        // Show empty state
         transactionsList.innerHTML = `
             <div class="transaction-empty">
                 <span>📭</span>
@@ -135,8 +221,7 @@ function loadTransactions() {
         return;
     }
 
-    // Show last 10 transactions
-    transactions.slice(0, 10).forEach(tx => {
+    transactions.forEach(tx => {
         const date = new Date(tx.date);
         const day = date.getDate();
         const month = currentLang === 'kk'
@@ -206,35 +291,38 @@ if (userMenuBtn && userMenu) {
 }
 
 // ========================================
-// Logout
+// Logout with Firebase
 // ========================================
 const logoutBtn = document.querySelector('.logout');
 if (logoutBtn) {
-    logoutBtn.addEventListener('click', (e) => {
+    logoutBtn.addEventListener('click', async (e) => {
         e.preventDefault();
-        localStorage.removeItem('1ge-user');
-        localStorage.removeItem('1ge-transactions');
-        window.location.href = 'index.html';
+
+        try {
+            await signOut(auth);
+            localStorage.removeItem('1ge-user');
+            localStorage.removeItem('1ge-transactions');
+            console.log('User signed out');
+            window.location.href = 'index.html';
+        } catch (error) {
+            console.error('Logout error:', error);
+            // Force redirect anyway
+            localStorage.removeItem('1ge-user');
+            window.location.href = 'index.html';
+        }
     });
 }
-
-console.log('1=GE Dashboard loaded with real balance system');
 
 // ========================================
 // Expense Chart (Chart.js)
 // ========================================
-let expenseChart = null;
-
-function initExpenseChart() {
+function initExpenseChart(transactions = []) {
     const ctx = document.getElementById('expense-chart');
     const legendContainer = document.getElementById('chart-legend');
 
     if (!ctx || !legendContainer) return;
 
-    const transactions = getTransactions();
-
     if (transactions.length === 0) {
-        // Show empty state
         const chartContainer = ctx.parentElement;
         chartContainer.innerHTML = `
             <div class="chart-empty">
@@ -358,9 +446,7 @@ document.querySelectorAll('.period-btn').forEach(btn => {
     btn.addEventListener('click', () => {
         document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-        // Could add period filtering here if needed
     });
 });
 
-// Initialize chart when page loads
-document.addEventListener('DOMContentLoaded', initExpenseChart);
+console.log('1=GE Dashboard loaded (Firebase mode)');
