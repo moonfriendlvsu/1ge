@@ -3,6 +3,27 @@
    ======================================== */
 
 // ========================================
+// Theme System
+// ========================================
+const savedTheme = localStorage.getItem('1ge-theme') || 'dark';
+document.documentElement.setAttribute('data-theme', savedTheme);
+
+const themeToggle = document.getElementById('theme-toggle');
+if (themeToggle) {
+    // Set initial icon
+    themeToggle.textContent = savedTheme === 'dark' ? '🌙' : '☀️';
+
+    themeToggle.addEventListener('click', function () {
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
+        document.documentElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('1ge-theme', newTheme);
+        themeToggle.textContent = newTheme === 'dark' ? '🌙' : '☀️';
+    });
+}
+
+// ========================================
 // Language System
 // ========================================
 let currentLang = localStorage.getItem('1ge-lang') || 'kk';
@@ -207,11 +228,11 @@ let expenseChart = null;
 function initExpenseChart() {
     const ctx = document.getElementById('expense-chart');
     const legendContainer = document.getElementById('chart-legend');
-    
+
     if (!ctx || !legendContainer) return;
-    
+
     const transactions = getTransactions();
-    
+
     if (transactions.length === 0) {
         // Show empty state
         const chartContainer = ctx.parentElement;
@@ -224,7 +245,7 @@ function initExpenseChart() {
         legendContainer.innerHTML = '';
         return;
     }
-    
+
     // Calculate spending by category
     const categories = {
         'Коммуналдық': { total: 0, color: '#10B981', icon: '🏠' },
@@ -232,7 +253,7 @@ function initExpenseChart() {
         'Дәріхана': { total: 0, color: '#F59E0B', icon: '💊' },
         'Басқа': { total: 0, color: '#8B5CF6', icon: '💳' }
     };
-    
+
     // Map service names to categories
     const categoryMapping = {
         // Utilities
@@ -254,17 +275,17 @@ function initExpenseChart() {
         'Sadykhan': 'Дәріхана',
         'Pharma Plus': 'Дәріхана'
     };
-    
+
     transactions.forEach(tx => {
         if (tx.type !== 'refill') {
             const category = categoryMapping[tx.service] || 'Басқа';
             categories[category].total += tx.amount;
         }
     });
-    
+
     // Filter out empty categories
     const activeCategories = Object.entries(categories).filter(([, data]) => data.total > 0);
-    
+
     if (activeCategories.length === 0) {
         const chartContainer = ctx.parentElement;
         chartContainer.innerHTML = `
@@ -276,16 +297,16 @@ function initExpenseChart() {
         legendContainer.innerHTML = '';
         return;
     }
-    
+
     const labels = activeCategories.map(([name]) => name);
     const data = activeCategories.map(([, cat]) => cat.total);
     const colors = activeCategories.map(([, cat]) => cat.color);
-    
+
     // Destroy existing chart if any
     if (expenseChart) {
         expenseChart.destroy();
     }
-    
+
     // Create doughnut chart
     expenseChart = new Chart(ctx, {
         type: 'doughnut',
@@ -312,7 +333,7 @@ function initExpenseChart() {
                     bodyColor: '#fff',
                     padding: 12,
                     callbacks: {
-                        label: function(context) {
+                        label: function (context) {
                             return context.parsed.toLocaleString() + '₸';
                         }
                     }
@@ -321,7 +342,7 @@ function initExpenseChart() {
             cutout: '65%'
         }
     });
-    
+
     // Build custom legend
     legendContainer.innerHTML = activeCategories.map(([name, cat]) => `
         <div class="legend-item">
