@@ -200,12 +200,12 @@ if (logoutBtn) {
             localStorage.removeItem('1ge-user');
             localStorage.removeItem('1ge-transactions');
             console.log('User signed out');
-            window.location.href = 'index.html';
+            window.location.href = '/';
         } catch (error) {
             console.error('Logout error:', error);
             // Force redirect anyway
             localStorage.removeItem('1ge-user');
-            window.location.href = 'index.html';
+            window.location.href = '/';
         }
     });
 }
