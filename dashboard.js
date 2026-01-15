@@ -449,4 +449,123 @@ document.querySelectorAll('.period-btn').forEach(btn => {
     });
 });
 
+// ========================================
+// Refill Balance Modal
+// ========================================
+import { updateDoc, addDoc, Timestamp } from './firebase-config.js';
+
+const refillBtn = document.getElementById('refill-btn');
+const refillModal = document.getElementById('refill-modal');
+const refillModalClose = document.getElementById('refill-modal-close');
+const refillAmountBtns = document.querySelectorAll('.refill-amount-btn');
+const refillCustomInput = document.getElementById('refill-custom-amount');
+const confirmRefillBtn = document.getElementById('confirm-refill');
+
+let selectedRefillAmount = 20000; // Default amount
+
+// Open modal
+if (refillBtn && refillModal) {
+    refillBtn.addEventListener('click', () => {
+        refillModal.classList.add('active');
+    });
+}
+
+// Close modal
+if (refillModalClose && refillModal) {
+    refillModalClose.addEventListener('click', () => {
+        refillModal.classList.remove('active');
+    });
+
+    refillModal.addEventListener('click', (e) => {
+        if (e.target === refillModal) {
+            refillModal.classList.remove('active');
+        }
+    });
+}
+
+// Amount selection buttons
+refillAmountBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+        refillAmountBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        selectedRefillAmount = parseInt(btn.dataset.amount);
+        if (refillCustomInput) refillCustomInput.value = '';
+    });
+});
+
+// Custom amount input
+if (refillCustomInput) {
+    refillCustomInput.addEventListener('input', () => {
+        if (refillCustomInput.value) {
+            refillAmountBtns.forEach(btn => btn.classList.remove('active'));
+            selectedRefillAmount = parseInt(refillCustomInput.value) || 0;
+        }
+    });
+}
+
+// Confirm refill
+if (confirmRefillBtn) {
+    confirmRefillBtn.addEventListener('click', async () => {
+        const amount = refillCustomInput?.value ? parseInt(refillCustomInput.value) : selectedRefillAmount;
+
+        if (amount < 1000) {
+            alert(currentLang === 'kk' ? 'Минимум 1000₸' : 'Минимум 1000₸');
+            return;
+        }
+
+        if (amount > 500000) {
+            alert(currentLang === 'kk' ? 'Максимум 500 000₸' : 'Максимум 500 000₸');
+            return;
+        }
+
+        confirmRefillBtn.disabled = true;
+        confirmRefillBtn.innerHTML = '<span>⏳</span>';
+
+        try {
+            // Update balance in Firestore
+            const newBalance = (userProfile?.balance || 0) + amount;
+            await updateDoc(doc(db, 'users', currentUser.uid), {
+                balance: newBalance
+            });
+
+            // Add refill transaction
+            await addDoc(collection(db, 'transactions'), {
+                userId: currentUser.uid,
+                type: 'refill',
+                amount: amount,
+                service: currentLang === 'kk' ? 'Баланс толтыру' : 'Пополнение',
+                icon: '💰',
+                date: new Date().toISOString(),
+                createdAt: Timestamp.now()
+            });
+
+            // Update local state
+            userProfile.balance = newBalance;
+            localStorage.setItem('1ge-user', JSON.stringify({
+                ...JSON.parse(localStorage.getItem('1ge-user') || '{}'),
+                balance: newBalance
+            }));
+
+            // Update UI
+            updateDashboard(userProfile);
+
+            // Close modal and reload transactions
+            refillModal.classList.remove('active');
+            loadTransactions();
+
+            // Show success
+            setTimeout(() => {
+                alert(currentLang === 'kk' ? `✅ ${amount.toLocaleString()}₸ сәтті толтырылды!` : `✅ ${amount.toLocaleString()}₸ успешно пополнено!`);
+            }, 300);
+
+        } catch (error) {
+            console.error('Refill error:', error);
+            alert(currentLang === 'kk' ? 'Қате орын алды' : 'Произошла ошибка');
+        } finally {
+            confirmRefillBtn.disabled = false;
+            confirmRefillBtn.innerHTML = `<span data-kk="Толтыру" data-ru="Пополнить">${currentLang === 'kk' ? 'Толтыру' : 'Пополнить'}</span>`;
+        }
+    });
+}
+
 console.log('1=GE Dashboard loaded (Firebase mode)');

@@ -3,7 +3,7 @@
 
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
-import { getFirestore, doc, setDoc, getDoc, collection, addDoc, query, where, orderBy, limit, getDocs, updateDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+import { getFirestore, doc, setDoc, getDoc, collection, addDoc, query, where, orderBy, limit, getDocs, updateDoc, serverTimestamp, Timestamp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 
 const firebaseConfig = {
     apiKey: "AIzaSyDKmaJATjfIDfV7VJiISLb6qHp0y3Km4iw",
@@ -43,6 +43,7 @@ export {
     limit,
     getDocs,
     updateDoc,
-    serverTimestamp
+    serverTimestamp,
+    Timestamp
 };
 

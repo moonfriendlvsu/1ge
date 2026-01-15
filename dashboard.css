@@ -605,3 +605,205 @@
         grid-template-columns: repeat(4, 1fr);
     }
 }
+
+/* ========================================
+   Refill Button
+   ======================================== */
+.refill-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    width: 100%;
+    margin-top: 1rem;
+    padding: 0.875rem;
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 0.75rem;
+    color: white;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.refill-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+}
+
+.refill-icon {
+    font-size: 1.1rem;
+}
+
+/* ========================================
+   Refill Modal
+   ======================================== */
+.refill-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    padding: 1rem;
+}
+
+.refill-modal.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.refill-modal .modal-content {
+    background: var(--color-bg-alt);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 1.5rem;
+    padding: 2rem;
+    max-width: 400px;
+    width: 100%;
+    position: relative;
+    transform: scale(0.9);
+    transition: transform 0.3s ease;
+}
+
+.refill-modal.active .modal-content {
+    transform: scale(1);
+}
+
+.refill-modal .modal-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    color: var(--color-text-muted);
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.refill-modal .modal-close:hover {
+    color: var(--color-text);
+}
+
+.refill-modal .modal-icon {
+    font-size: 3rem;
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.refill-modal .modal-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 0.5rem;
+    color: var(--color-text);
+}
+
+.refill-modal .modal-text {
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+/* Amount Selection Buttons */
+.refill-amounts {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+}
+
+.refill-amount-btn {
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.75rem;
+    color: var(--color-text);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.refill-amount-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.refill-amount-btn.active {
+    background: rgba(16, 185, 129, 0.15);
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+}
+
+/* Custom Amount Input */
+.refill-custom {
+    margin-bottom: 1.5rem;
+}
+
+.refill-custom label {
+    display: block;
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+    margin-bottom: 0.5rem;
+}
+
+.input-with-currency {
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.75rem;
+    overflow: hidden;
+    transition: border-color 0.2s;
+}
+
+.input-with-currency:focus-within {
+    border-color: var(--color-primary);
+}
+
+.input-with-currency input {
+    flex: 1;
+    padding: 0.875rem 1rem;
+    background: transparent;
+    border: none;
+    color: var(--color-text);
+    font-size: 1.125rem;
+    font-weight: 600;
+    outline: none;
+}
+
+.input-with-currency input::placeholder {
+    color: var(--color-text-muted);
+}
+
+.input-with-currency span {
+    padding: 0.875rem 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--color-text-muted);
+    font-weight: 600;
+}
+
+/* Light Theme */
+[data-theme="light"] .refill-modal .modal-content {
+    background: white;
+    border-color: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .refill-amount-btn {
+    background: rgba(0, 0, 0, 0.02);
+    border-color: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .input-with-currency {
+    background: rgba(0, 0, 0, 0.02);
+    border-color: rgba(0, 0, 0, 0.1);
+}

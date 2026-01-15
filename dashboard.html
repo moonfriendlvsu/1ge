@@ -79,7 +79,41 @@
                     <span data-kk="Келесі жаңарту: 1 ақпан" data-ru="Следующее обновление: 1 февраля">Келесі жаңарту: 1
                         ақпан</span>
                 </div>
+                <button class="refill-btn" id="refill-btn">
+                    <span class="refill-icon">➕</span>
+                    <span data-kk="Балансты толтыру" data-ru="Пополнить баланс">Балансты толтыру</span>
+                </button>
             </section>
+
+            <!-- Refill Modal -->
+            <div class="modal refill-modal" id="refill-modal">
+                <div class="modal-content">
+                    <button class="modal-close" id="refill-modal-close">&times;</button>
+                    <div class="modal-icon">💰</div>
+                    <h3 class="modal-title" data-kk="Балансты толтыру" data-ru="Пополнить баланс">Балансты толтыру</h3>
+                    <p class="modal-text" data-kk="Демо режимде пополнение" data-ru="Пополнение в демо режиме">Демо
+                        режимде пополнение</p>
+
+                    <div class="refill-amounts">
+                        <button class="refill-amount-btn" data-amount="5000">5 000₸</button>
+                        <button class="refill-amount-btn" data-amount="10000">10 000₸</button>
+                        <button class="refill-amount-btn active" data-amount="20000">20 000₸</button>
+                        <button class="refill-amount-btn" data-amount="50000">50 000₸</button>
+                    </div>
+
+                    <div class="refill-custom">
+                        <label data-kk="Басқа сома" data-ru="Другая сумма">Басқа сома</label>
+                        <div class="input-with-currency">
+                            <input type="number" id="refill-custom-amount" placeholder="0" min="1000" max="500000">
+                            <span>₸</span>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary btn-full" id="confirm-refill">
+                        <span data-kk="Толтыру" data-ru="Пополнить">Толтыру</span>
+                    </button>
+                </div>
+            </div>
 
             <!-- Expense Chart -->
             <section class="expense-chart-section">
