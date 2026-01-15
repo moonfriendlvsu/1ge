@@ -348,3 +348,141 @@
         align-items: flex-start;
     }
 }
+
+/* ========================================
+   Theme Toggle Button
+   ======================================== */
+.auth-lang .theme-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    font-size: 1.25rem;
+    border-radius: 0.5rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.auth-lang .theme-toggle:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: scale(1.05);
+}
+
+/* Dark theme - show moon, hide sun */
+.theme-icon-light {
+    display: none;
+}
+
+.theme-icon-dark {
+    display: inline;
+}
+
+/* Light theme - show sun, hide moon */
+[data-theme="light"] .theme-icon-light {
+    display: inline;
+}
+
+[data-theme="light"] .theme-icon-dark {
+    display: none;
+}
+
+/* ========================================
+   Light Theme for Auth Pages
+   ======================================== */
+[data-theme="light"] .auth-body,
+.light-theme.auth-body {
+    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 50%, #f0f9ff 100%);
+}
+
+[data-theme="light"] .auth-card,
+.light-theme .auth-card {
+    background: rgba(255, 255, 255, 0.9);
+    border-color: rgba(0, 0, 0, 0.1);
+    box-shadow: 0 25px 80px rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .auth-title,
+.light-theme .auth-title {
+    color: #1a1a2e;
+}
+
+[data-theme="light"] .auth-subtitle,
+[data-theme="light"] .form-group label,
+[data-theme="light"] .checkbox-label,
+[data-theme="light"] .auth-footer,
+.light-theme .auth-subtitle,
+.light-theme .form-group label,
+.light-theme .checkbox-label,
+.light-theme .auth-footer {
+    color: #64748b;
+}
+
+[data-theme="light"] .input-with-icon input,
+.light-theme .input-with-icon input {
+    background: rgba(0, 0, 0, 0.03);
+    border-color: rgba(0, 0, 0, 0.15);
+    color: #1a1a2e;
+}
+
+[data-theme="light"] .input-with-icon input::placeholder,
+.light-theme .input-with-icon input::placeholder {
+    color: rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="light"] .input-with-icon input:focus,
+.light-theme .input-with-icon input:focus {
+    background: rgba(16, 185, 129, 0.05);
+    border-color: #10B981;
+}
+
+[data-theme="light"] .auth-divider::before,
+[data-theme="light"] .auth-divider::after,
+.light-theme .auth-divider::before,
+.light-theme .auth-divider::after {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .auth-divider span,
+.light-theme .auth-divider span {
+    color: #64748b;
+}
+
+[data-theme="light"] .auth-lang .lang-btn,
+[data-theme="light"] .auth-lang .theme-toggle,
+.light-theme .auth-lang .lang-btn,
+.light-theme .auth-lang .theme-toggle {
+    background: rgba(0, 0, 0, 0.05);
+    color: #64748b;
+}
+
+[data-theme="light"] .auth-lang .lang-btn:hover,
+[data-theme="light"] .auth-lang .theme-toggle:hover,
+.light-theme .auth-lang .lang-btn:hover,
+.light-theme .auth-lang .theme-toggle:hover {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .auth-lang .lang-btn.active,
+.light-theme .auth-lang .lang-btn.active {
+    background: var(--color-primary);
+    color: white;
+}
+
+[data-theme="light"] .auth-back,
+.light-theme .auth-back {
+    color: #64748b;
+}
+
+[data-theme="light"] .auth-back:hover,
+.light-theme .auth-back:hover {
+    color: #10B981;
+}
+
+[data-theme="light"] .toggle-password,
+.light-theme .toggle-password {
+    color: #64748b;
+}
