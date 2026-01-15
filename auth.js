@@ -95,6 +95,27 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // ========================================
+    // Theme Toggle
+    // ========================================
+    const themeToggle = document.getElementById('theme-toggle');
+    const savedTheme = localStorage.getItem('1ge-theme') || 'dark';
+
+    // Apply saved theme
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    document.body.classList.toggle('light-theme', savedTheme === 'light');
+
+    if (themeToggle) {
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
+            document.documentElement.setAttribute('data-theme', newTheme);
+            document.body.classList.toggle('light-theme', newTheme === 'light');
+            localStorage.setItem('1ge-theme', newTheme);
+        });
+    }
+
+    // ========================================
     // Password Toggle
     // ========================================
     const togglePassword = document.getElementById('toggle-password');
