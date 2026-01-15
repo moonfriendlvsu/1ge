@@ -1,10 +1,24 @@
 // 1=GE Service Worker
-const CACHE_NAME = '1ge-cache-v1';
+const CACHE_NAME = '1ge-cache-v2';
 const urlsToCache = [
     '/',
     '/index.html',
+    '/offline.html',
     '/styles.css',
     '/script.js',
+    '/dashboard.html',
+    '/dashboard.css',
+    '/dashboard.js',
+    '/login.html',
+    '/register.html',
+    '/auth.css',
+    '/auth.js',
+    '/profile.html',
+    '/profile.css',
+    '/profile.js',
+    '/transactions.html',
+    '/transactions.css',
+    '/transactions.js',
     '/favicon.png',
     '/manifest.json'
 ];
@@ -14,7 +28,7 @@ self.addEventListener('install', event => {
     event.waitUntil(
         caches.open(CACHE_NAME)
             .then(cache => {
-                console.log('1=GE: Caching app shell');
+                console.log('1=GE: Caching app shell v2');
                 return cache.addAll(urlsToCache);
             })
             .then(() => self.skipWaiting())
@@ -37,33 +51,50 @@ self.addEventListener('activate', event => {
     );
 });
 
-// Fetch event - serve from cache, fallback to network
+// Fetch event - network first, cache fallback
 self.addEventListener('fetch', event => {
+    // Skip non-GET requests
+    if (event.request.method !== 'GET') return;
+
+    // Skip Firebase and external requests
+    if (event.request.url.includes('firebase') ||
+        event.request.url.includes('googleapis') ||
+        event.request.url.includes('gstatic')) {
+        return;
+    }
+
     event.respondWith(
-        caches.match(event.request)
+        fetch(event.request)
             .then(response => {
-                // Return cached version or fetch from network
-                if (response) {
-                    return response;
-                }
-                return fetch(event.request).then(response => {
-                    // Don't cache non-successful responses
-                    if (!response || response.status !== 200 || response.type !== 'basic') {
-                        return response;
-                    }
-                    // Clone and cache the response
+                // Clone and cache successful responses
+                if (response && response.status === 200) {
                     const responseToCache = response.clone();
                     caches.open(CACHE_NAME).then(cache => {
                         cache.put(event.request, responseToCache);
                     });
-                    return response;
-                });
+                }
+                return response;
             })
             .catch(() => {
-                // Offline fallback
-                if (event.request.destination === 'document') {
-                    return caches.match('/index.html');
-                }
+                // Offline - try cache
+                return caches.match(event.request)
+                    .then(cachedResponse => {
+                        if (cachedResponse) {
+                            return cachedResponse;
+                        }
+                        // Show offline page for navigation
+                        if (event.request.destination === 'document') {
+                            return caches.match('/offline.html');
+                        }
+                    });
             })
     );
 });
+
+// Listen for messages to update cache
+self.addEventListener('message', event => {
+    if (event.data === 'skipWaiting') {
+        self.skipWaiting();
+    }
+});
+
