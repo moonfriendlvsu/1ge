@@ -486,3 +486,42 @@
 .light-theme .toggle-password {
     color: #64748b;
 }
+
+/* ========================================
+   Card Input Section
+   ======================================== */
+.card-section {
+    margin-top: 1rem;
+    padding: 1.25rem;
+    background: rgba(16, 185, 129, 0.05);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+    border-radius: 1rem;
+}
+
+.card-section-header {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-primary);
+    margin-bottom: 1rem;
+}
+
+.form-row-card {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.card-hint {
+    display: block;
+    margin-top: 0.75rem;
+    text-align: center;
+    color: var(--color-primary) !important;
+    opacity: 1 !important;
+}
+
+/* Light theme card section */
+[data-theme="light"] .card-section,
+.light-theme .card-section {
+    background: rgba(16, 185, 129, 0.08);
+    border-color: rgba(16, 185, 129, 0.3);
+}
