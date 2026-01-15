@@ -139,6 +139,8 @@ function loadProfile(userData) {
 async function loadStats() {
     const statTransactions = document.getElementById('stat-transactions');
     const statSpent = document.getElementById('stat-spent');
+    const statRefills = document.getElementById('stat-refills');
+    const statBalance = document.getElementById('stat-balance');
 
     if (!currentUser) {
         // Use cached data
@@ -151,6 +153,15 @@ async function loadStats() {
                 .filter(tx => tx.type !== 'refill')
                 .reduce((sum, tx) => sum + tx.amount, 0);
             statSpent.textContent = totalSpent.toLocaleString() + '₸';
+        }
+        if (statRefills) {
+            const totalRefills = transactions
+                .filter(tx => tx.type === 'refill')
+                .reduce((sum, tx) => sum + tx.amount, 0);
+            statRefills.textContent = totalRefills.toLocaleString() + '₸';
+        }
+        if (statBalance && userProfile) {
+            statBalance.textContent = (userProfile.balance || 0).toLocaleString() + '₸';
         }
         return;
     }
@@ -181,6 +192,17 @@ async function loadStats() {
             statSpent.textContent = totalSpent.toLocaleString() + '₸';
         }
 
+        if (statRefills) {
+            const totalRefills = transactions
+                .filter(tx => tx.type === 'refill')
+                .reduce((sum, tx) => sum + tx.amount, 0);
+            statRefills.textContent = totalRefills.toLocaleString() + '₸';
+        }
+
+        if (statBalance && userProfile) {
+            statBalance.textContent = (userProfile.balance || 0).toLocaleString() + '₸';
+        }
+
         console.log('Stats loaded:', transactions.length, 'transactions');
 
     } catch (error) {
@@ -188,6 +210,8 @@ async function loadStats() {
         // Fall back to cached values
         if (statTransactions) statTransactions.textContent = '0';
         if (statSpent) statSpent.textContent = '0₸';
+        if (statRefills) statRefills.textContent = '0₸';
+        if (statBalance) statBalance.textContent = '0₸';
     }
 }
 
