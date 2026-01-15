@@ -210,4 +210,161 @@ if (logoutBtn) {
     });
 }
 
+// ========================================
+// Edit Profile Modal
+// ========================================
+import { updateDoc, updatePassword } from './firebase-config.js';
+
+const editProfileBtn = document.getElementById('edit-profile-btn');
+const editModal = document.getElementById('edit-modal');
+const editModalClose = document.getElementById('edit-modal-close');
+const editForm = document.getElementById('edit-form');
+const editNameInput = document.getElementById('edit-name');
+const editEmailInput = document.getElementById('edit-email');
+
+// Open edit modal
+if (editProfileBtn && editModal) {
+    editProfileBtn.addEventListener('click', () => {
+        if (userProfile) {
+            editNameInput.value = userProfile.name || '';
+            editEmailInput.value = userProfile.email || '';
+        }
+        editModal.classList.add('active');
+    });
+}
+
+// Close edit modal
+if (editModalClose && editModal) {
+    editModalClose.addEventListener('click', () => {
+        editModal.classList.remove('active');
+    });
+
+    editModal.addEventListener('click', (e) => {
+        if (e.target === editModal) {
+            editModal.classList.remove('active');
+        }
+    });
+}
+
+// Submit edit form
+if (editForm) {
+    editForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const newName = editNameInput.value.trim();
+        if (!newName) return;
+
+        const submitBtn = editForm.querySelector('button[type="submit"]');
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span>⏳</span>';
+
+        try {
+            // Update name in Firestore
+            await updateDoc(doc(db, 'users', currentUser.uid), {
+                name: newName
+            });
+
+            // Update local state
+            userProfile.name = newName;
+            localStorage.setItem('1ge-user', JSON.stringify({
+                ...JSON.parse(localStorage.getItem('1ge-user') || '{}'),
+                name: newName
+            }));
+
+            // Update UI
+            loadProfile(userProfile);
+
+            // Close modal
+            editModal.classList.remove('active');
+
+            alert(currentLang === 'kk' ? '✅ Профиль сақталды!' : '✅ Профиль сохранён!');
+
+        } catch (error) {
+            console.error('Error updating profile:', error);
+            alert(currentLang === 'kk' ? 'Қате орын алды' : 'Произошла ошибка');
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = `<span data-kk="Сақтау" data-ru="Сохранить">${currentLang === 'kk' ? 'Сақтау' : 'Сохранить'}</span>`;
+        }
+    });
+}
+
+// ========================================
+// Change Password Modal
+// ========================================
+const changePasswordLink = document.getElementById('change-password-link');
+const passwordModal = document.getElementById('password-modal');
+const passwordModalClose = document.getElementById('password-modal-close');
+const passwordForm = document.getElementById('password-form');
+const newPasswordInput = document.getElementById('new-password');
+const confirmPasswordInput = document.getElementById('confirm-password');
+
+// Open password modal
+if (changePasswordLink && passwordModal) {
+    changePasswordLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        passwordModal.classList.add('active');
+    });
+}
+
+// Close password modal
+if (passwordModalClose && passwordModal) {
+    passwordModalClose.addEventListener('click', () => {
+        passwordModal.classList.remove('active');
+    });
+
+    passwordModal.addEventListener('click', (e) => {
+        if (e.target === passwordModal) {
+            passwordModal.classList.remove('active');
+        }
+    });
+}
+
+// Submit password form
+if (passwordForm) {
+    passwordForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const newPassword = newPasswordInput.value;
+        const confirmPassword = confirmPasswordInput.value;
+
+        if (newPassword !== confirmPassword) {
+            alert(currentLang === 'kk' ? 'Құпия сөздер сәйкес келмейді' : 'Пароли не совпадают');
+            return;
+        }
+
+        if (newPassword.length < 6) {
+            alert(currentLang === 'kk' ? 'Құпия сөз кемінде 6 таңба болуы керек' : 'Пароль должен быть минимум 6 символов');
+            return;
+        }
+
+        const submitBtn = passwordForm.querySelector('button[type="submit"]');
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span>⏳</span>';
+
+        try {
+            // Update password in Firebase Auth
+            await updatePassword(auth.currentUser, newPassword);
+
+            // Close modal
+            passwordModal.classList.remove('active');
+            passwordForm.reset();
+
+            alert(currentLang === 'kk' ? '✅ Құпия сөз өзгертілді!' : '✅ Пароль изменён!');
+
+        } catch (error) {
+            console.error('Error updating password:', error);
+
+            if (error.code === 'auth/requires-recent-login') {
+                alert(currentLang === 'kk' ? 'Қауіпсіздік себептерімен қайта кіріңіз' : 'Для смены пароля требуется перезайти');
+            } else {
+                alert(currentLang === 'kk' ? 'Қате орын алды' : 'Произошла ошибка');
+            }
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = `<span data-kk="Өзгерту" data-ru="Изменить">${currentLang === 'kk' ? 'Өзгерту' : 'Изменить'}</span>`;
+        }
+    });
+}
+
 console.log('1=GE Profile loaded (Firebase mode)');

@@ -42,7 +42,66 @@
                     <span class="badge-icon">✓</span>
                     <span data-kk="Верификацияланған" data-ru="Верифицирован">Верификацияланған</span>
                 </div>
+                <button class="edit-profile-btn" id="edit-profile-btn">
+                    <span>✏️</span>
+                    <span data-kk="Өзгерту" data-ru="Изменить">Өзгерту</span>
+                </button>
             </section>
+
+            <!-- Edit Profile Modal -->
+            <div class="modal edit-modal" id="edit-modal">
+                <div class="modal-content">
+                    <button class="modal-close" id="edit-modal-close">&times;</button>
+                    <div class="modal-icon">✏️</div>
+                    <h3 class="modal-title" data-kk="Профильді өзгерту" data-ru="Редактировать профиль">Профильді
+                        өзгерту</h3>
+
+                    <form id="edit-form" class="edit-form">
+                        <div class="form-group">
+                            <label for="edit-name" data-kk="Аты-жөніңіз" data-ru="Ваше имя">Аты-жөніңіз</label>
+                            <input type="text" id="edit-name" placeholder="Асан Қасым" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="edit-email" data-kk="Email" data-ru="Email">Email</label>
+                            <input type="email" id="edit-email" disabled>
+                            <span class="input-hint" data-kk="Email өзгертуге болмайды"
+                                data-ru="Email нельзя изменить">Email өзгертуге болмайды</span>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-full">
+                            <span data-kk="Сақтау" data-ru="Сохранить">Сақтау</span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Change Password Modal -->
+            <div class="modal password-modal" id="password-modal">
+                <div class="modal-content">
+                    <button class="modal-close" id="password-modal-close">&times;</button>
+                    <div class="modal-icon">🔐</div>
+                    <h3 class="modal-title" data-kk="Құпия сөзді өзгерту" data-ru="Изменить пароль">Құпия сөзді өзгерту
+                    </h3>
+
+                    <form id="password-form" class="edit-form">
+                        <div class="form-group">
+                            <label for="new-password" data-kk="Жаңа құпия сөз" data-ru="Новый пароль">Жаңа құпия
+                                сөз</label>
+                            <input type="password" id="new-password" placeholder="••••••••" minlength="6" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="confirm-password" data-kk="Растау" data-ru="Подтвердить">Растау</label>
+                            <input type="password" id="confirm-password" placeholder="••••••••" required>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-full">
+                            <span data-kk="Өзгерту" data-ru="Изменить">Өзгерту</span>
+                        </button>
+                    </form>
+                </div>
+            </div>
 
             <!-- User Info -->
             <section class="profile-info">
@@ -110,7 +169,7 @@
                         <span data-kk="Хабарландырулар" data-ru="Уведомления">Хабарландырулар</span>
                         <span class="settings-arrow">→</span>
                     </a>
-                    <a href="#" class="settings-item">
+                    <a href="#" class="settings-item" id="change-password-link">
                         <span class="settings-icon">🔐</span>
                         <span data-kk="Құпия сөзді өзгерту" data-ru="Изменить пароль">Құпия сөзді өзгерту</span>
                         <span class="settings-arrow">→</span>

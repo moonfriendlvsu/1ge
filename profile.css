@@ -253,3 +253,163 @@
     color: var(--color-text-muted);
     padding: 1rem 0;
 }
+
+/* ========================================
+   Edit Profile Button
+   ======================================== */
+.edit-profile-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    padding: 0.75rem 1.5rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 2rem;
+    color: var(--color-text);
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.edit-profile-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+}
+
+/* ========================================
+   Profile Modals
+   ======================================== */
+.edit-modal,
+.password-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    padding: 1rem;
+}
+
+.edit-modal.active,
+.password-modal.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.edit-modal .modal-content,
+.password-modal .modal-content {
+    background: var(--color-bg-alt);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 1.5rem;
+    padding: 2rem;
+    max-width: 400px;
+    width: 100%;
+    position: relative;
+    transform: scale(0.9);
+    transition: transform 0.3s ease;
+}
+
+.edit-modal.active .modal-content,
+.password-modal.active .modal-content {
+    transform: scale(1);
+}
+
+.modal-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    color: var(--color-text-muted);
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.modal-close:hover {
+    color: var(--color-text);
+}
+
+.modal-icon {
+    font-size: 3rem;
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.modal-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: var(--color-text);
+}
+
+/* Edit Form */
+.edit-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.edit-form .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.edit-form label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-text-muted);
+}
+
+.edit-form input {
+    padding: 0.875rem 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.75rem;
+    color: var(--color-text);
+    font-size: 1rem;
+    transition: all 0.2s;
+}
+
+.edit-form input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    background: rgba(16, 185, 129, 0.05);
+}
+
+.edit-form input:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.edit-form .input-hint {
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+}
+
+/* Light Theme */
+[data-theme="light"] .edit-modal .modal-content,
+[data-theme="light"] .password-modal .modal-content {
+    background: white;
+    border-color: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .edit-form input {
+    background: rgba(0, 0, 0, 0.02);
+    border-color: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .edit-profile-btn {
+    background: rgba(0, 0, 0, 0.03);
+    border-color: rgba(0, 0, 0, 0.1);
+}
