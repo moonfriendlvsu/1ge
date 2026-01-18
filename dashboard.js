@@ -568,4 +568,69 @@ if (confirmRefillBtn) {
     });
 }
 
+// ========================================
+// Onboarding Tutorial
+// ========================================
+const onboardingModal = document.getElementById('onboarding-modal');
+const onboardingSlides = document.querySelectorAll('.onboarding-slide');
+const onboardingDots = document.querySelectorAll('.onboarding-dots .dot');
+const onboardingNext = document.getElementById('onboarding-next');
+const onboardingSkip = document.getElementById('onboarding-skip');
+
+let currentSlide = 0;
+
+function showSlide(index) {
+    onboardingSlides.forEach((slide, i) => {
+        slide.classList.toggle('active', i === index);
+    });
+    onboardingDots.forEach((dot, i) => {
+        dot.classList.toggle('active', i === index);
+    });
+
+    // Change button text on last slide
+    if (index === onboardingSlides.length - 1) {
+        onboardingNext.textContent = currentLang === 'kk' ? 'Бастау' : 'Начать';
+    } else {
+        onboardingNext.textContent = currentLang === 'kk' ? 'Келесі' : 'Далее';
+    }
+}
+
+function closeOnboarding() {
+    onboardingModal.classList.remove('active');
+    localStorage.setItem('1ge-onboarding-done', 'true');
+}
+
+// Check if user needs onboarding
+if (onboardingModal && !localStorage.getItem('1ge-onboarding-done')) {
+    setTimeout(() => {
+        onboardingModal.classList.add('active');
+        setLanguage(currentLang); // Apply language to onboarding
+    }, 500);
+}
+
+// Next button
+if (onboardingNext) {
+    onboardingNext.addEventListener('click', () => {
+        if (currentSlide < onboardingSlides.length - 1) {
+            currentSlide++;
+            showSlide(currentSlide);
+        } else {
+            closeOnboarding();
+        }
+    });
+}
+
+// Skip button
+if (onboardingSkip) {
+    onboardingSkip.addEventListener('click', closeOnboarding);
+}
+
+// Dot navigation
+onboardingDots.forEach(dot => {
+    dot.addEventListener('click', () => {
+        currentSlide = parseInt(dot.dataset.slide);
+        showSlide(currentSlide);
+    });
+});
+
 console.log('1=GE Dashboard loaded (Firebase mode)');
