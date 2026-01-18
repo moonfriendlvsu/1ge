@@ -808,6 +808,77 @@
     border-color: rgba(0, 0, 0, 0.1);
 }
 
+/* Light Theme - Cards & Sections */
+[data-theme="light"] .balance-card {
+    background: linear-gradient(135deg, #10B981, #0EA5E9);
+    border: none;
+}
+
+[data-theme="light"] .action-card {
+    background: white;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .action-card:hover {
+    border-color: var(--color-primary);
+    box-shadow: 0 8px 25px rgba(16, 185, 129, 0.15);
+}
+
+[data-theme="light"] .expense-chart-section {
+    background: white;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .transactions-section {
+    background: white;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .tx-item {
+    background: rgba(0, 0, 0, 0.02);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .tx-item:hover {
+    background: rgba(0, 0, 0, 0.04);
+    border-color: rgba(16, 185, 129, 0.3);
+}
+
+[data-theme="light"] .period-btn {
+    background: rgba(0, 0, 0, 0.03);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    color: #666;
+}
+
+[data-theme="light"] .period-btn.active {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: white;
+}
+
+[data-theme="light"] .dash-header {
+    background: rgba(255, 255, 255, 0.95);
+    border-color: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .bottom-nav {
+    background: rgba(255, 255, 255, 0.98);
+    border-color: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .user-menu {
+    background: white;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+}
+
+[data-theme="light"] .action-icon {
+    background: rgba(16, 185, 129, 0.1);
+}
+
 /* ========================================
    Onboarding Modal
    ======================================== */
