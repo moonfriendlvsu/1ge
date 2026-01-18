@@ -391,4 +391,87 @@ if (passwordForm) {
     });
 }
 
+// ========================================
+// QR Code Generation (Simple SVG)
+// ========================================
+function generateQRCode(data) {
+    // Simple QR-like pattern generator for demo
+    const size = 25;
+    const cellSize = 6;
+    const totalSize = size * cellSize;
+
+    // Create a pseudo-random but deterministic pattern based on data
+    let hash = 0;
+    for (let i = 0; i < data.length; i++) {
+        hash = ((hash << 5) - hash) + data.charCodeAt(i);
+        hash |= 0;
+    }
+
+    let svg = `<svg width="${totalSize}" height="${totalSize}" viewBox="0 0 ${totalSize} ${totalSize}" xmlns="http://www.w3.org/2000/svg">`;
+    svg += `<rect width="100%" height="100%" fill="white"/>`;
+
+    // Position detection patterns (corners)
+    const drawPositionPattern = (x, y) => {
+        // Outer
+        svg += `<rect x="${x}" y="${y}" width="${7 * cellSize}" height="${7 * cellSize}" fill="#10B981"/>`;
+        svg += `<rect x="${x + cellSize}" y="${y + cellSize}" width="${5 * cellSize}" height="${5 * cellSize}" fill="white"/>`;
+        svg += `<rect x="${x + 2 * cellSize}" y="${y + 2 * cellSize}" width="${3 * cellSize}" height="${3 * cellSize}" fill="#10B981"/>`;
+    };
+
+    drawPositionPattern(0, 0);
+    drawPositionPattern((size - 7) * cellSize, 0);
+    drawPositionPattern(0, (size - 7) * cellSize);
+
+    // Generate pattern based on hash
+    for (let row = 0; row < size; row++) {
+        for (let col = 0; col < size; col++) {
+            // Skip position pattern areas
+            if ((row < 8 && col < 8) || (row < 8 && col >= size - 8) || (row >= size - 8 && col < 8)) continue;
+
+            // Use hash to determine if cell is filled
+            const idx = row * size + col;
+            const filled = ((hash >> (idx % 32)) & 1) ^ ((hash >> ((idx + 7) % 32)) & 1);
+
+            if (filled) {
+                svg += `<rect x="${col * cellSize}" y="${row * cellSize}" width="${cellSize}" height="${cellSize}" fill="#10B981"/>`;
+            }
+        }
+    }
+
+    svg += '</svg>';
+    return svg;
+}
+
+// Generate QR code for current user
+const qrCodeContainer = document.getElementById('qr-code');
+if (qrCodeContainer && currentUser) {
+    setTimeout(() => {
+        const paymentUrl = `https://1ge.pages.dev/pay?to=${currentUser.uid}`;
+        qrCodeContainer.innerHTML = generateQRCode(paymentUrl);
+    }, 1000);
+}
+
+// Share QR Code
+const qrShareBtn = document.getElementById('qr-share-btn');
+if (qrShareBtn) {
+    qrShareBtn.addEventListener('click', async () => {
+        if (navigator.share) {
+            try {
+                await navigator.share({
+                    title: '1=GE Payment',
+                    text: currentLang === 'kk' ? 'Маған 1=GE арқылы төлем жіберіңіз' : 'Отправьте мне платеж через 1=GE',
+                    url: `https://1ge.pages.dev/pay?to=${currentUser?.uid || 'demo'}`
+                });
+            } catch (err) {
+                console.log('Share cancelled');
+            }
+        } else {
+            // Fallback: copy link
+            const link = `https://1ge.pages.dev/pay?to=${currentUser?.uid || 'demo'}`;
+            navigator.clipboard.writeText(link);
+            alert(currentLang === 'kk' ? '✅ Сілтеме көшірілді!' : '✅ Ссылка скопирована!');
+        }
+    });
+}
+
 console.log('1=GE Profile loaded (Firebase mode)');

@@ -1,0 +1,204 @@
+/* ========================================
+   1=GE FAQ Page Styles
+   ======================================== */
+
+.faq-body {
+    background: var(--color-bg);
+    min-height: 100vh;
+}
+
+/* Header */
+.faq-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background: rgba(10, 10, 10, 0.95);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1rem;
+    z-index: 1000;
+}
+
+.faq-header h1 {
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.lang-toggle {
+    display: flex;
+    gap: 0.25rem;
+}
+
+.lang-btn {
+    padding: 0.35rem 0.6rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.5rem;
+    color: var(--color-text-muted);
+    font-size: 0.7rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.lang-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.lang-btn.active {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: white;
+}
+
+/* Main */
+.faq-main {
+    padding-top: 80px;
+    padding-bottom: 2rem;
+}
+
+.faq-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+/* Intro */
+.faq-intro {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.faq-intro h2 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(135deg, #10B981, #0EA5E9);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.faq-intro p {
+    color: var(--color-text-muted);
+}
+
+/* FAQ List */
+.faq-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+}
+
+.faq-item {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 1rem;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.faq-item:hover {
+    border-color: var(--color-primary);
+}
+
+.faq-question {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem;
+    background: none;
+    border: none;
+    color: var(--color-text);
+    font-size: 0.95rem;
+    font-weight: 500;
+    text-align: left;
+    cursor: pointer;
+}
+
+.faq-icon {
+    font-size: 1.5rem;
+    color: var(--color-primary);
+    transition: transform 0.3s ease;
+}
+
+.faq-item.open .faq-icon {
+    transform: rotate(45deg);
+}
+
+.faq-answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+
+.faq-item.open .faq-answer {
+    max-height: 200px;
+}
+
+.faq-answer p {
+    padding: 0 1.25rem 1.25rem;
+    color: var(--color-text-muted);
+    font-size: 0.875rem;
+    line-height: 1.6;
+}
+
+/* Contact Card */
+.contact-card {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(14, 165, 233, 0.1));
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    border-radius: 1.5rem;
+    padding: 2rem;
+    text-align: center;
+}
+
+.contact-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.contact-card h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.contact-card p {
+    color: var(--color-text-muted);
+    margin-bottom: 1.5rem;
+}
+
+.contact-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.875rem 1.5rem;
+    background: var(--color-primary);
+    border-radius: 2rem;
+    color: white;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.contact-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(16, 185, 129, 0.3);
+}
+
+/* Light Theme */
+[data-theme="light"] .faq-header {
+    background: rgba(255, 255, 255, 0.95);
+    border-color: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .faq-item {
+    background: rgba(0, 0, 0, 0.02);
+    border-color: rgba(0, 0, 0, 0.1);
+}

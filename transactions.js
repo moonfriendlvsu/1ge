@@ -253,4 +253,43 @@ if (searchInput) {
     });
 }
 
+// ========================================
+// Export to CSV
+// ========================================
+const exportBtn = document.getElementById('export-btn');
+if (exportBtn) {
+    exportBtn.addEventListener('click', () => {
+        if (allTransactions.length === 0) {
+            alert(currentLang === 'kk' ? 'Экспорттау үшін транзакциялар жоқ' : 'Нет транзакций для экспорта');
+            return;
+        }
+
+        // Create CSV content
+        const headers = ['Күні', 'Сервис', 'Сома', 'Түрі'];
+        const rows = allTransactions.map(tx => {
+            const date = new Date(tx.date).toLocaleDateString('ru-RU');
+            const service = tx.service || '';
+            const amount = tx.amount || 0;
+            const type = tx.type === 'refill' ? 'Пополнение' : 'Оплата';
+            return [date, service, amount, type].join(',');
+        });
+
+        const csvContent = [headers.join(','), ...rows].join('\n');
+
+        // Create and download file
+        const blob = new Blob(['\ufeff' + csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `1GE_transactions_${new Date().toISOString().split('T')[0]}.csv`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+
+        // Show success
+        alert(currentLang === 'kk' ? '✅ CSV файл жүктелді!' : '✅ CSV файл скачан!');
+    });
+}
+
 console.log('1=GE Transactions loaded (Firebase mode)');
