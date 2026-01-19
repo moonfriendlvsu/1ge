@@ -77,6 +77,10 @@ onAuthStateChanged(auth, async (user) => {
 document.addEventListener('DOMContentLoaded', () => {
     setLanguage(currentLang);
 
+    // Apply saved theme
+    const savedTheme = localStorage.getItem('1ge-theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+
     // Try to show cached balance immediately
     const cached = localStorage.getItem('1ge-user');
     if (cached) {

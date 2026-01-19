@@ -589,3 +589,79 @@
     padding: 1rem;
     font-size: 1rem;
 }
+
+/* ========================================
+   Light Theme
+   ======================================== */
+[data-theme="light"] .pay-header {
+    background: rgba(255, 255, 255, 0.95);
+    border-color: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .search-box input {
+    background: rgba(0, 0, 0, 0.03);
+    border-color: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .category-btn {
+    background: rgba(0, 0, 0, 0.03);
+    border-color: rgba(0, 0, 0, 0.08);
+    color: #666;
+}
+
+[data-theme="light"] .category-btn:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] .service-item {
+    background: white;
+    border-color: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .service-item:hover {
+    background: rgba(16, 185, 129, 0.02);
+}
+
+[data-theme="light"] .service-icon {
+    background: rgba(16, 185, 129, 0.08);
+}
+
+[data-theme="light"] .pay-modal-content {
+    background: white;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .pay-modal-close {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] .pay-form-group input {
+    background: rgba(0, 0, 0, 0.03);
+    border-color: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .pay-summary {
+    background: rgba(0, 0, 0, 0.02);
+}
+
+[data-theme="light"] .summary-row.total {
+    border-color: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .receipt-content {
+    background: white;
+    border-color: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .receipt-details {
+    background: rgba(0, 0, 0, 0.02);
+    border-color: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .receipt-row {
+    border-color: rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] .receipt-id {
+    background: rgba(0, 0, 0, 0.02);
+}
