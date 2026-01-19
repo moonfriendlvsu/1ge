@@ -40,6 +40,10 @@ function setLanguage(lang) {
 // Initialize language
 setLanguage(currentLang);
 
+// Apply saved theme
+const savedTheme = localStorage.getItem('1ge-theme') || 'dark';
+document.documentElement.setAttribute('data-theme', savedTheme);
+
 // Language toggle buttons
 document.querySelectorAll('.lang-btn').forEach(btn => {
     btn.addEventListener('click', () => {

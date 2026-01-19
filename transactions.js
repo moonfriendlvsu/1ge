@@ -37,6 +37,10 @@ function setLanguage(lang) {
 // Initialize language
 setLanguage(currentLang);
 
+// Apply saved theme
+const savedTheme = localStorage.getItem('1ge-theme') || 'dark';
+document.documentElement.setAttribute('data-theme', savedTheme);
+
 // Category mapping
 const categoryMapping = {
     // Utilities

@@ -249,3 +249,43 @@
     background: rgba(16, 185, 129, 0.2);
     border-color: var(--color-primary);
 }
+
+/* Light Theme */
+[data-theme="light"] .tx-header {
+    background: rgba(255, 255, 255, 0.95);
+    border-color: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .search-box input {
+    background: rgba(0, 0, 0, 0.03);
+    border-color: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .filter-btn {
+    background: rgba(0, 0, 0, 0.03);
+    border-color: rgba(0, 0, 0, 0.08);
+    color: #666;
+}
+
+[data-theme="light"] .summary-stat {
+    background: white;
+    border-color: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .tx-item {
+    background: white;
+    border-color: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .tx-item:hover {
+    background: rgba(16, 185, 129, 0.02);
+}
+
+[data-theme="light"] .tx-icon {
+    background: rgba(16, 185, 129, 0.08);
+}
+
+[data-theme="light"] .export-btn {
+    background: rgba(0, 0, 0, 0.03);
+    border-color: rgba(0, 0, 0, 0.08);
+}
