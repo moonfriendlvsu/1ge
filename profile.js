@@ -47,6 +47,22 @@ document.querySelectorAll('.lang-btn').forEach(btn => {
     });
 });
 
+// Load cached user data IMMEDIATELY (before Firebase)
+const cachedUser = localStorage.getItem('1ge-user');
+if (cachedUser) {
+    const userData = JSON.parse(cachedUser);
+    const profileName = document.getElementById('profile-name');
+    const profileAvatar = document.getElementById('profile-avatar');
+
+    if (profileName && userData.name) {
+        profileName.textContent = userData.name;
+    }
+    if (profileAvatar && userData.name) {
+        const initials = userData.name.split(' ').map(n => n[0]).slice(0, 2).join('').toUpperCase();
+        profileAvatar.textContent = initials;
+    }
+}
+
 // Global state
 let currentUser = null;
 let userProfile = null;
