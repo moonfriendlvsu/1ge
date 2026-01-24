@@ -101,12 +101,7 @@ async function loadTransactionsFromFirestore() {
     const txList = document.getElementById('tx-list');
 
     if (txList) {
-        txList.innerHTML = `
-            <div class="tx-empty">
-                <span>⏳</span>
-                <p>Жүктелуде...</p>
-            </div>
-        `;
+        // Loading state handled by skeletons in HTML
     }
 
     try {

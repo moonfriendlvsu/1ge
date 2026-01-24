@@ -114,6 +114,8 @@ function updateDashboard(userData) {
     const userName = document.querySelector('.user-name');
     if (userName && userData.name) {
         userName.textContent = userData.name;
+        userName.classList.remove('skeleton', 'skeleton-text');
+        userName.style.width = '';
     }
 
     // Update avatar initials
@@ -125,12 +127,14 @@ function updateDashboard(userData) {
             .join('')
             .toUpperCase();
         userAvatar.textContent = initials;
+        userAvatar.classList.remove('skeleton', 'skeleton-circle');
     }
 
     // Update balance
     const balance = userData.balance !== undefined ? userData.balance : 30000;
     const balanceValue = document.querySelector('.balance-value');
     if (balanceValue) {
+        balanceValue.classList.remove('skeleton');
         animateBalance(balanceValue, balance);
     }
 
@@ -143,6 +147,8 @@ function updateDashboard(userData) {
     }
     if (limitText) {
         limitText.textContent = `${balance.toLocaleString()}₸ / 30 000₸`;
+        limitText.classList.remove('skeleton', 'skeleton-text-sm');
+        limitText.style.width = '';
     }
 
     console.log('Dashboard updated. Balance:', balance);
@@ -155,13 +161,8 @@ async function loadTransactions() {
     const transactionsList = document.querySelector('.transactions-list');
     if (!transactionsList) return;
 
-    // Show loading state
-    transactionsList.innerHTML = `
-        <div class="transaction-empty">
-            <span>⏳</span>
-            <p>Жүктелуде...</p>
-        </div>
-    `;
+    // Show loading state - REMOVED to keep skeletons
+    // transactionsList.innerHTML = `...`;
 
     try {
         if (!currentUser) {

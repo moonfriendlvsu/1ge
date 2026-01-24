@@ -60,10 +60,14 @@ if (cachedUser) {
 
     if (profileName && userData.name) {
         profileName.textContent = userData.name;
+        profileName.classList.remove('skeleton', 'skeleton-text');
+        profileName.style.width = '';
+        profileName.style.height = '';
     }
     if (profileAvatar && userData.name) {
         const initials = userData.name.split(' ').map(n => n[0]).slice(0, 2).join('').toUpperCase();
         profileAvatar.textContent = initials;
+        profileAvatar.classList.remove('skeleton', 'skeleton-circle');
     }
 }
 
@@ -116,18 +120,30 @@ function loadProfile(userData) {
             .join('')
             .toUpperCase();
         avatar.textContent = initials;
+        avatar.classList.remove('skeleton', 'skeleton-circle');
     }
 
     // Update name
     const profileName = document.getElementById('profile-name');
     const infoName = document.getElementById('info-name');
-    if (profileName && userData.name) profileName.textContent = userData.name;
-    if (infoName && userData.name) infoName.textContent = userData.name;
+    if (profileName && userData.name) {
+        profileName.textContent = userData.name;
+        profileName.classList.remove('skeleton', 'skeleton-text');
+        profileName.style.width = '';
+        profileName.style.height = '';
+    }
+    if (infoName && userData.name) {
+        infoName.textContent = userData.name;
+        infoName.classList.remove('skeleton', 'skeleton-text');
+        infoName.style.width = '';
+    }
 
     // Update email
     const infoPhone = document.getElementById('info-phone');
     if (infoPhone && userData.email) {
         infoPhone.textContent = userData.email;
+        infoPhone.classList.remove('skeleton', 'skeleton-text');
+        infoPhone.style.width = '';
     }
 
     // Update IIN (partially masked for security)

@@ -3304,3 +3304,85 @@ body::before {
         gap: var(--space-3);
     }
 }
+
+/* ========================================
+   Skeleton Loading
+   ======================================== */
+
+.skeleton {
+    background: linear-gradient(90deg,
+            rgba(255, 255, 255, 0.05) 25%,
+            rgba(255, 255, 255, 0.15) 50%,
+            rgba(255, 255, 255, 0.05) 75%);
+    background-size: 200% 100%;
+    animation: skeleton-shimmer 1.5s infinite;
+    color: transparent !important;
+    border-color: transparent !important;
+    pointer-events: none;
+    border-radius: 4px;
+}
+
+[data-theme="light"] .skeleton {
+    background: linear-gradient(90deg,
+            rgba(0, 0, 0, 0.05) 25%,
+            rgba(0, 0, 0, 0.15) 50%,
+            rgba(0, 0, 0, 0.05) 75%);
+}
+
+@keyframes skeleton-shimmer {
+    0% {
+        background-position: 200% 0;
+    }
+
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+.skeleton-text {
+    height: 1em;
+    width: 80%;
+    display: inline-block;
+}
+
+.skeleton-text-sm {
+    height: 0.8em;
+    width: 60%;
+}
+
+.skeleton-text-lg {
+    height: 1.5em;
+    width: 90%;
+}
+
+.skeleton-circle {
+    border-radius: 50% !important;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.skeleton-rect {
+    width: 100%;
+    height: 100%;
+}
+
+/* Specific usage in Dashboard */
+.dash-balance-value.skeleton {
+    width: 200px;
+    height: 3rem;
+    margin: 0 auto;
+}
+
+.tx-amount.skeleton {
+    width: 80px;
+}
+
+.tx-desc h4.skeleton {
+    width: 120px;
+    height: 1em;
+    margin-bottom: 4px;
+}
+
+.tx-desc p.skeleton {
+    width: 80px;
+    height: 0.8em;
+}
