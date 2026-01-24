@@ -86,8 +86,11 @@
                     </div>
                 </div>
 
-                <!-- Card Details Section -->
-                <div class="card-section">
+                <!-- Card Details Section (Coming Soon) -->
+                <div class="card-section card-section-disabled">
+                    <div class="coming-soon-overlay">
+                        <span data-kk="🔒 Жақында" data-ru="🔒 Скоро">🔒 Жақында</span>
+                    </div>
                     <div class="card-section-header" data-kk="💳 Карта мәліметтері" data-ru="💳 Данные карты">💳 Карта
                         мәліметтері</div>
 
@@ -96,7 +99,7 @@
                         <div class="input-with-icon">
                             <span class="input-icon">💳</span>
                             <input type="text" id="card-number" name="card-number" placeholder="0000 0000 0000 0000"
-                                maxlength="19" required>
+                                maxlength="19" disabled>
                         </div>
                     </div>
 
@@ -106,7 +109,7 @@
                             <div class="input-with-icon">
                                 <span class="input-icon">📅</span>
                                 <input type="text" id="card-expiry" name="card-expiry" placeholder="MM/YY" maxlength="5"
-                                    required>
+                                    disabled>
                             </div>
                         </div>
                         <div class="form-group">
@@ -114,14 +117,10 @@
                             <div class="input-with-icon">
                                 <span class="input-icon">🔐</span>
                                 <input type="text" id="card-cvv" name="card-cvv" placeholder="•••" maxlength="3"
-                                    required>
+                                    disabled>
                             </div>
                         </div>
                     </div>
-
-                    <span class="input-hint card-hint" data-kk="🔒 Demo режим — карта мәліметтері сақталмайды"
-                        data-ru="🔒 Demo режим — данные карты не сохраняются">🔒 Demo режим — карта мәліметтері
-                        сақталмайды</span>
                 </div>
 
                 <div class="form-options">

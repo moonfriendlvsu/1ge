@@ -525,3 +525,30 @@
     background: rgba(16, 185, 129, 0.08);
     border-color: rgba(16, 185, 129, 0.3);
 }
+
+/* Disabled card section */
+.card-section-disabled {
+    position: relative;
+    pointer-events: none;
+}
+
+.card-section-disabled > *:not(.coming-soon-overlay) {
+    filter: blur(3px);
+    opacity: 0.5;
+}
+
+.coming-soon-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+    background: linear-gradient(135deg, var(--color-primary), #0EA5E9);
+    padding: 0.5rem 1.25rem;
+    border-radius: 2rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: white;
+    white-space: nowrap;
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+}
