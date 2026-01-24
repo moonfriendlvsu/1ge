@@ -291,6 +291,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Update calculator impact text with current language
         updateCalculatorLanguage();
+
+        // Update header position after text change
+        setTimeout(updateHeaderPosition, 0);
     }
 
     function updateCalculatorLanguage() {
@@ -298,6 +301,15 @@ document.addEventListener('DOMContentLoaded', function () {
         const slider = document.getElementById('power-slider');
         if (slider) {
             updatePowerCalculator(parseInt(slider.value));
+        }
+    }
+
+    function updateHeaderPosition() {
+        const banner = document.querySelector('.disclaimer-banner');
+        const header = document.querySelector('.header');
+        if (banner && header) {
+            const bannerHeight = banner.offsetHeight;
+            header.style.top = bannerHeight + 'px';
         }
     }
 
@@ -312,6 +324,10 @@ document.addEventListener('DOMContentLoaded', function () {
     setTimeout(() => {
         setLanguage(currentLang);
     }, 100);
+
+    // Update header position on resize and load
+    window.addEventListener('resize', updateHeaderPosition);
+    window.addEventListener('load', updateHeaderPosition);
 
     // ========================================
     // Scroll Indicator Click
