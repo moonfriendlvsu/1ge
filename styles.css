@@ -126,7 +126,10 @@
    Disclaimer Banner
    ======================================== */
 .disclaimer-banner {
-    position: relative;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
     z-index: 9999;
     background: linear-gradient(90deg, #F59E0B, #EF4444);
     color: white;
@@ -806,7 +809,7 @@ body::before {
 
 .header {
     position: fixed;
-    top: 0;
+    top: 30px;
     left: 0;
     right: 0;
     z-index: 1000;
