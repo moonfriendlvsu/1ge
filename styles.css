@@ -123,6 +123,23 @@
 }
 
 /* ========================================
+   Disclaimer Banner
+   ======================================== */
+.disclaimer-banner {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 9999;
+    background: linear-gradient(90deg, #F59E0B, #EF4444);
+    color: white;
+    text-align: center;
+    padding: 0.5rem 1rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+/* ========================================
    Reset & Base
    ======================================== */
 
