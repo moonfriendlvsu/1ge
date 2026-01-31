@@ -1,56 +1,28 @@
 /* ========================================
    1=GE AI Chatbot - Powered by Gemini
+   Secure version using serverless function
    ======================================== */
 
 (function () {
     'use strict';
 
-    // Gemini API Configuration
-    const GEMINI_API_KEY = 'AIzaSyBspZlXYLXZ3Iz7pRoYprUVexTl9BMjlXU';
-    const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent';
-
-    // System prompt for the AI
-    const SYSTEM_PROMPT = `Ты — дружелюбный помощник благотворительной платформы 1=GE.
-
-О платформе 1=GE:
-- 1=GE — это платформа благотворительности в Казахстане
-- Каждый человек жертвует всего 1 тенге в день
-- Все средства идут на помощь нуждающимся людям
-- Деньги распределяются на проверенные проекты (медицина, социальная помощь)
-- Регистрация бесплатная, нужен только email
-- Контакты: support@1ge.kz, Telegram: @1ge_support
-
-Правила ответа:
-- Отвечай коротко и дружелюбно (1-3 предложения)
-- Используй эмодзи для тепла
-- Отвечай на том языке, на котором спрашивают (казахский или русский)
-- Если вопрос не о 1=GE, вежливо верни к теме платформы
-- Не выдумывай информацию, которой нет выше`;
+    // API endpoint (Cloudflare Function)
+    const CHAT_API_URL = '/api/chat';
 
     // Get current language
     function getLang() {
         return localStorage.getItem('1ge-lang') || 'kk';
     }
 
-    // Call Gemini API
+    // Call our secure API
     async function getAIResponse(userMessage) {
         try {
-            const response = await fetch(`${GEMINI_API_URL}?key=${GEMINI_API_KEY}`, {
+            const response = await fetch(CHAT_API_URL, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({
-                    contents: [{
-                        parts: [{
-                            text: `${SYSTEM_PROMPT}\n\nПользователь спрашивает: ${userMessage}`
-                        }]
-                    }],
-                    generationConfig: {
-                        temperature: 0.7,
-                        maxOutputTokens: 200
-                    }
-                })
+                body: JSON.stringify({ message: userMessage })
             });
 
             if (!response.ok) {
@@ -58,9 +30,9 @@
             }
 
             const data = await response.json();
-            return data.candidates[0].content.parts[0].text;
+            return data.reply;
         } catch (error) {
-            console.error('Gemini API error:', error);
+            console.error('Chat API error:', error);
             const lang = getLang();
             return lang === 'kk'
                 ? '😔 Кешіріңіз, қазір жауап бере алмадым. Кейінірек қайталап көріңіз.'
