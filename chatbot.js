@@ -7,7 +7,7 @@
 
     // Gemini API Configuration
     const GEMINI_API_KEY = 'AIzaSyBspZlXYLXZ3Iz7pRoYprUVexTl9BMjlXU';
-    const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-001:generateContent';
+    const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent';
 
     // System prompt for the AI
     const SYSTEM_PROMPT = `Ты — дружелюбный помощник благотворительной платформы 1=GE.
