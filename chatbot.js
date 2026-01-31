@@ -6,7 +6,7 @@
     'use strict';
 
     // Gemini API Configuration
-    const GEMINI_API_KEY = 'AIzaSyBspZlXYLXZ3Iz7pRoYprUVexTl9BMjlXU';
+    const GEMINI_API_KEY = 'AIzaSyAlNmQ2uH-lNreHFr15u55PguMebOTPZYI';
     const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent';
 
     // System prompt for the AI
