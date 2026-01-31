@@ -16,31 +16,24 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=1.3">
-    <link rel="stylesheet" href="dashboard.css?v=1.3">
-    <link rel="stylesheet" href="chatbot.css?v=1.1">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="dashboard.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 </head>
 
 <body class="dashboard-body">
-    <!-- Disclaimer Banner -->
-    <div class="disclaimer-banner" data-kk="⚠️ Тест нұсқасы. Төлемдер қабылданбайды."
-        data-ru="⚠️ Тестовая версия. Приём платежей не осуществляется.">
-        ⚠️ Тест нұсқасы. Төлемдер қабылданбайды.
-    </div>
-
     <!-- Dashboard Header -->
     <header class="dash-header">
         <div class="dash-header-content">
-            <a href="/" class="dash-logo">
+            <a href="index.html" class="dash-logo">
                 <span class="logo-1">1</span><span class="logo-eq">=</span><span class="logo-ge">GE</span>
             </a>
 
             <div class="dash-user">
                 <button class="theme-toggle" id="theme-toggle" aria-label="Тема">🌙</button>
-                <div class="user-avatar skeleton skeleton-circle"></div>
+                <div class="user-avatar">АҚ</div>
                 <div class="user-info">
-                    <span class="user-name skeleton skeleton-text" style="width: 120px;"></span>
+                    <span class="user-name">Асан Қасым</span>
                     <span class="user-status" data-kk="Верификацияланған" data-ru="Верифицирован">✓
                         Верификацияланған</span>
                 </div>
@@ -54,7 +47,7 @@
             <a href="#" data-kk="Баптаулар" data-ru="Настройки">⚙️ Баптаулар</a>
             <a href="#" data-kk="Көмек" data-ru="Помощь">❓ Көмек</a>
             <hr>
-            <a href="/" class="logout" data-kk="Шығу" data-ru="Выйти">🚪 Шығу</a>
+            <a href="index.html" class="logout" data-kk="Шығу" data-ru="Выйти">🚪 Шығу</a>
         </div>
     </header>
 
@@ -69,7 +62,7 @@
                     <span class="balance-month" data-kk="Қаңтар 2026" data-ru="Январь 2026">Қаңтар 2026</span>
                 </div>
                 <div class="balance-amount">
-                    <span class="balance-value skeleton"></span>
+                    <span class="balance-value">30 000</span>
                     <span class="balance-currency">₸</span>
                 </div>
                 <div class="balance-limit">
@@ -78,7 +71,7 @@
                     </div>
                     <div class="limit-text">
                         <span data-kk="Қолжетімді" data-ru="Доступно">Қолжетімді</span>
-                        <span class="skeleton skeleton-text-sm" style="width: 100px;"></span>
+                        <span>30 000₸ / 30 000₸</span>
                     </div>
                 </div>
                 <div class="balance-renewal">
@@ -86,41 +79,7 @@
                     <span data-kk="Келесі жаңарту: 1 ақпан" data-ru="Следующее обновление: 1 февраля">Келесі жаңарту: 1
                         ақпан</span>
                 </div>
-                <button class="refill-btn" id="refill-btn">
-                    <span class="refill-icon">➕</span>
-                    <span data-kk="Балансты толтыру" data-ru="Пополнить баланс">Балансты толтыру</span>
-                </button>
             </section>
-
-            <!-- Refill Modal -->
-            <div class="modal refill-modal" id="refill-modal">
-                <div class="modal-content">
-                    <button class="modal-close" id="refill-modal-close">&times;</button>
-                    <div class="modal-icon">💰</div>
-                    <h3 class="modal-title" data-kk="Балансты толтыру" data-ru="Пополнить баланс">Балансты толтыру</h3>
-                    <p class="modal-text" data-kk="Демо режимде пополнение" data-ru="Пополнение в демо режиме">Демо
-                        режимде пополнение</p>
-
-                    <div class="refill-amounts">
-                        <button class="refill-amount-btn" data-amount="5000">5 000₸</button>
-                        <button class="refill-amount-btn" data-amount="10000">10 000₸</button>
-                        <button class="refill-amount-btn active" data-amount="20000">20 000₸</button>
-                        <button class="refill-amount-btn" data-amount="50000">50 000₸</button>
-                    </div>
-
-                    <div class="refill-custom">
-                        <label data-kk="Басқа сома" data-ru="Другая сумма">Басқа сома</label>
-                        <div class="input-with-currency">
-                            <input type="number" id="refill-custom-amount" placeholder="0" min="1000" max="500000">
-                            <span>₸</span>
-                        </div>
-                    </div>
-
-                    <button class="btn btn-primary btn-full" id="confirm-refill">
-                        <span data-kk="Толтыру" data-ru="Пополнить">Толтыру</span>
-                    </button>
-                </div>
-            </div>
 
             <!-- Expense Chart -->
             <section class="expense-chart-section">
@@ -176,39 +135,7 @@
                 </div>
 
                 <div class="transactions-list">
-                    <!-- Skeleton Item 1 -->
-                    <div class="transaction-item skeleton-item">
-                        <div class="tx-icon skeleton skeleton-circle"></div>
-                        <div class="tx-info">
-                            <div class="tx-desc">
-                                <h4 class="skeleton skeleton-text" style="width: 120px; margin-bottom: 4px;"></h4>
-                                <p class="skeleton skeleton-text-sm" style="width: 80px;"></p>
-                            </div>
-                            <div class="tx-amount skeleton skeleton-text" style="width: 70px;"></div>
-                        </div>
-                    </div>
-                    <!-- Skeleton Item 2 -->
-                    <div class="transaction-item skeleton-item">
-                        <div class="tx-icon skeleton skeleton-circle"></div>
-                        <div class="tx-info">
-                            <div class="tx-desc">
-                                <h4 class="skeleton skeleton-text" style="width: 100px; margin-bottom: 4px;"></h4>
-                                <p class="skeleton skeleton-text-sm" style="width: 60px;"></p>
-                            </div>
-                            <div class="tx-amount skeleton skeleton-text" style="width: 70px;"></div>
-                        </div>
-                    </div>
-                    <!-- Skeleton Item 3 -->
-                    <div class="transaction-item skeleton-item">
-                        <div class="tx-icon skeleton skeleton-circle"></div>
-                        <div class="tx-info">
-                            <div class="tx-desc">
-                                <h4 class="skeleton skeleton-text" style="width: 110px; margin-bottom: 4px;"></h4>
-                                <p class="skeleton skeleton-text-sm" style="width: 90px;"></p>
-                            </div>
-                            <div class="tx-amount skeleton skeleton-text" style="width: 70px;"></div>
-                        </div>
-                    </div>
+                    <!-- Transactions will be loaded dynamically from localStorage -->
                 </div>
             </section>
 
@@ -246,52 +173,7 @@
         </a>
     </nav>
 
-    <!-- Onboarding Modal -->
-    <div class="onboarding-modal" id="onboarding-modal">
-        <div class="onboarding-content">
-            <div class="onboarding-slides" id="onboarding-slides">
-                <!-- Slide 1 -->
-                <div class="onboarding-slide active">
-                    <div class="slide-icon">👋</div>
-                    <h2 data-kk="Қош келдіңіз!" data-ru="Добро пожаловать!">Қош келдіңіз!</h2>
-                    <p data-kk="1=GE — Қазақстан азаматтарына арналған әлеуметтік төлем жүйесі"
-                        data-ru="1=GE — социальная платёжная система для граждан Казахстана">1=GE — Қазақстан
-                        азаматтарына арналған әлеуметтік төлем жүйесі</p>
-                </div>
-                <!-- Slide 2 -->
-                <div class="onboarding-slide">
-                    <div class="slide-icon">💰</div>
-                    <h2 data-kk="30,000₸ ай сайын" data-ru="30,000₸ каждый месяц">30,000₸ ай сайын</h2>
-                    <p data-kk="Баланс ай сайын автоматты түрде жаңарады. Коммуналдық төлемдер, азық-түлік және дәрі-дәрмек үшін қолданыңыз!"
-                        data-ru="Баланс обновляется каждый месяц. Используйте для оплаты коммуналки, продуктов и лекарств!">
-                        Баланс ай сайын автоматты түрде жаңарады. Коммуналдық төлемдер, азық-түлік және дәрі-дәрмек үшін
-                        қолданыңыз!</p>
-                </div>
-                <!-- Slide 3 -->
-                <div class="onboarding-slide">
-                    <div class="slide-icon">🚀</div>
-                    <h2 data-kk="Бастайық!" data-ru="Начнём!">Бастайық!</h2>
-                    <p data-kk="Төлем жасау үшін 'Төлемдер' бөліміне өтіңіз немесе балансыңызды толтырыңыз"
-                        data-ru="Перейдите в раздел 'Платежи' чтобы оплатить или пополните баланс">Төлем жасау үшін
-                        'Төлемдер' бөліміне өтіңіз немесе балансыңызды толтырыңыз</p>
-                </div>
-            </div>
-            <div class="onboarding-dots" id="onboarding-dots">
-                <span class="dot active" data-slide="0"></span>
-                <span class="dot" data-slide="1"></span>
-                <span class="dot" data-slide="2"></span>
-            </div>
-            <div class="onboarding-nav">
-                <button class="onboarding-skip" id="onboarding-skip" data-kk="Өткізу"
-                    data-ru="Пропустить">Өткізу</button>
-                <button class="onboarding-next" id="onboarding-next" data-kk="Келесі" data-ru="Далее">Келесі</button>
-            </div>
-        </div>
-    </div>
-
-    <script type="module" src="dashboard.js?v=1.0"></script>
-    <script src="shared.js"></script>
-    <script src="chatbot.js?v=3.0"></script>
+    <script type="module" src="dashboard.js"></script>
 </body>
 
 </html>
