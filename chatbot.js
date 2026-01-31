@@ -1,101 +1,71 @@
 /* ========================================
-   1=GE FAQ Chatbot
-   Free scripted bot with pre-programmed answers
+   1=GE AI Chatbot - Powered by Gemini
    ======================================== */
 
 (function () {
     'use strict';
 
-    // FAQ Database (Bilingual)
-    const faqData = {
-        greetings: {
-            patterns: ['привет', 'салем', 'здравствуй', 'хай', 'hello', 'hi', 'сәлем'],
-            response: {
-                kk: '👋 Сәлем! Мен 1=GE көмекшісімін. Сізге қалай көмектесе аламын?',
-                ru: '👋 Привет! Я помощник 1=GE. Чем могу помочь?'
-            }
-        },
-        whatIs1ge: {
-            patterns: [
-                'что такое', '1ge', '1=ge', 'не деген', 'деген не', 'дегеніміз', 'дегенiмiз',
-                'бұл не', 'бул не', 'что это', 'это что', 'как работает', 'қалай жұмыс',
-                'кандай сайт', 'қандай сайт', 'что за сайт', 'какой сайт', 'про сайт',
-                'не істейді', 'не истейди', 'что делает', 'для чего', 'не үшін', 'неге керек',
-                'сайт туралы', 'про проект', 'о проекте', 'жоба туралы', 'осы не', 'мынау не'
-            ],
-            response: {
-                kk: '💚 1=GE — бұл қайырымдылық платформасы. Әр адам күніне 1 теңге береді, барлығы бірігіп мұқтаж адамдарға көмектеседі.',
-                ru: '💚 1=GE — это платформа благотворительности. Каждый человек жертвует 1 тенге в день, и вместе мы помогаем нуждающимся.'
-            }
-        },
-        howToDonate: {
-            patterns: ['как пожертвовать', 'қалай беруге', 'донат', 'аудар', 'перевод', 'перевести', 'помочь', 'көмектес'],
-            response: {
-                kk: '💸 Жертва беру өте оңай! "1₸ беру" батырмасын басыңыз — автоматты түрде жалпы қорға түседі.',
-                ru: '💸 Пожертвовать очень просто! Нажмите кнопку "Внести 1₸" — и ваш вклад автоматически попадёт в общий фонд.'
-            }
-        },
-        whereMoney: {
-            patterns: ['куда', 'қайда', 'деньги', 'ақша', 'средства', 'фонд', 'қор', 'распределя'],
-            response: {
-                kk: '🎯 Барлық қаражат "Жобалар" бөлімінде көрсетілген нақты адамдарға бөлінеді. Әр жоба тексерілген.',
-                ru: '🎯 Все средства распределяются между реальными людьми в разделе "Проекты". Каждый проект проверен.'
-            }
-        },
-        safety: {
-            patterns: ['безопасн', 'мошенни', 'обман', 'доверя', 'қауіпсіз', 'алаяқ', 'сенім'],
-            response: {
-                kk: '🛡️ Біз әр өтінішті тексереміз. Құжаттар, медициналық анықтамалар — барлығы расталады.',
-                ru: '🛡️ Мы проверяем каждую заявку. Документы, медицинские справки — всё подтверждается.'
-            }
-        },
-        registration: {
-            patterns: ['регистра', 'тіркел', 'аккаунт', 'войти', 'кіру', 'вход', 'создать'],
-            response: {
-                kk: '📝 Тіркелу үшін "Тіркелу" батырмасын басыңыз. Email және құпия сөз қажет.',
-                ru: '📝 Для регистрации нажмите "Зарегистрироваться". Нужен email и пароль.'
-            }
-        },
-        contact: {
-            patterns: ['связь', 'контакт', 'поддержк', 'байланыс', 'қолдау', 'телефон', 'email', 'написать'],
-            response: {
-                kk: '📧 Бізбен байланысу: support@1ge.kz немесе Telegram: @1ge_support',
-                ru: '📧 Связаться с нами: support@1ge.kz или Telegram: @1ge_support'
-            }
-        },
-        thanks: {
-            patterns: ['спасибо', 'рахмет', 'благодар', 'thank'],
-            response: {
-                kk: '😊 Өзіңізге рахмет! Тағы сұрақ болса — жазыңыз!',
-                ru: '😊 Вам спасибо! Если будут ещё вопросы — пишите!'
-            }
-        }
-    };
+    // Gemini API Configuration
+    const GEMINI_API_KEY = 'AIzaSyBspZlXYLXZ3Iz7pRoYprUVexTl9BMjlXU';
+    const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent';
 
-    // Default response if no match
-    const defaultResponse = {
-        kk: '🤔 Кешіріңіз, сұрағыңызды түсінбедім. Мына сұрақтарды қоюға болады:\n• 1=GE дегеніміз не?\n• Қалай көмектесуге болады?\n• Ақша қайда жұмсалады?',
-        ru: '🤔 Извините, не понял вопрос. Попробуйте спросить:\n• Что такое 1=GE?\n• Как пожертвовать?\n• Куда идут деньги?'
-    };
+    // System prompt for the AI
+    const SYSTEM_PROMPT = `Ты — дружелюбный помощник благотворительной платформы 1=GE.
+
+О платформе 1=GE:
+- 1=GE — это платформа благотворительности в Казахстане
+- Каждый человек жертвует всего 1 тенге в день
+- Все средства идут на помощь нуждающимся людям
+- Деньги распределяются на проверенные проекты (медицина, социальная помощь)
+- Регистрация бесплатная, нужен только email
+- Контакты: support@1ge.kz, Telegram: @1ge_support
+
+Правила ответа:
+- Отвечай коротко и дружелюбно (1-3 предложения)
+- Используй эмодзи для тепла
+- Отвечай на том языке, на котором спрашивают (казахский или русский)
+- Если вопрос не о 1=GE, вежливо верни к теме платформы
+- Не выдумывай информацию, которой нет выше`;
 
     // Get current language
     function getLang() {
         return localStorage.getItem('1ge-lang') || 'kk';
     }
 
-    // Find matching response
-    function findResponse(message) {
-        const lowerMsg = message.toLowerCase();
+    // Call Gemini API
+    async function getAIResponse(userMessage) {
+        try {
+            const response = await fetch(`${GEMINI_API_URL}?key=${GEMINI_API_KEY}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    contents: [{
+                        parts: [{
+                            text: `${SYSTEM_PROMPT}\n\nПользователь спрашивает: ${userMessage}`
+                        }]
+                    }],
+                    generationConfig: {
+                        temperature: 0.7,
+                        maxOutputTokens: 200
+                    }
+                })
+            });
 
-        for (const key in faqData) {
-            const faq = faqData[key];
-            for (const pattern of faq.patterns) {
-                if (lowerMsg.includes(pattern)) {
-                    return faq.response;
-                }
+            if (!response.ok) {
+                throw new Error('API request failed');
             }
+
+            const data = await response.json();
+            return data.candidates[0].content.parts[0].text;
+        } catch (error) {
+            console.error('Gemini API error:', error);
+            const lang = getLang();
+            return lang === 'kk'
+                ? '😔 Кешіріңіз, қазір жауап бере алмадым. Кейінірек қайталап көріңіз.'
+                : '😔 Извините, не смог ответить. Попробуйте позже.';
         }
-        return defaultResponse;
     }
 
     // Create chatbot UI
@@ -113,12 +83,12 @@
         chatWindow.className = 'chatbot-window';
         chatWindow.innerHTML = `
             <div class="chatbot-header">
-                <span class="chatbot-title">🤖 ${lang === 'kk' ? '1=GE Көмекші' : '1=GE Помощник'}</span>
+                <span class="chatbot-title">🤖 ${lang === 'kk' ? '1=GE AI Көмекші' : '1=GE AI Помощник'}</span>
                 <button class="chatbot-close">×</button>
             </div>
             <div class="chatbot-messages" id="chatbot-messages">
                 <div class="chatbot-message bot">
-                    ${lang === 'kk' ? '👋 Сәлем! Мен 1=GE көмекшісімін. Маған сұрақ қойыңыз!' : '👋 Привет! Я помощник 1=GE. Задайте мне вопрос!'}
+                    ${lang === 'kk' ? '👋 Сәлем! Мен 1=GE жасанды интеллект көмекшісімін. Кез келген сұрақ қойыңыз!' : '👋 Привет! Я AI-помощник 1=GE. Задайте любой вопрос!'}
                 </div>
             </div>
             <div class="chatbot-input-area">
@@ -149,20 +119,26 @@
 
         const input = document.getElementById('chatbot-input');
         const sendBtn = document.getElementById('chatbot-send');
+        let isProcessing = false;
 
-        function sendMessage() {
+        async function sendMessage() {
             const msg = input.value.trim();
-            if (!msg) return;
+            if (!msg || isProcessing) return;
 
+            isProcessing = true;
             addMessage(msg, 'user');
             input.value = '';
 
-            // Simulate typing delay
-            setTimeout(() => {
-                const response = findResponse(msg);
-                const lang = getLang();
-                addMessage(response[lang] || response.ru, 'bot');
-            }, 500 + Math.random() * 500);
+            // Show typing indicator
+            const typingId = showTyping();
+
+            // Get AI response
+            const response = await getAIResponse(msg);
+
+            // Remove typing indicator and show response
+            removeTyping(typingId);
+            addMessage(response, 'bot');
+            isProcessing = false;
         }
 
         sendBtn.addEventListener('click', sendMessage);
@@ -179,6 +155,24 @@
         msgDiv.textContent = text;
         messagesDiv.appendChild(msgDiv);
         messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    }
+
+    // Show typing indicator
+    function showTyping() {
+        const messagesDiv = document.getElementById('chatbot-messages');
+        const typingDiv = document.createElement('div');
+        typingDiv.className = 'chatbot-message bot typing';
+        typingDiv.id = 'typing-indicator';
+        typingDiv.innerHTML = '<span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span>';
+        messagesDiv.appendChild(typingDiv);
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        return 'typing-indicator';
+    }
+
+    // Remove typing indicator
+    function removeTyping(id) {
+        const typingDiv = document.getElementById(id);
+        if (typingDiv) typingDiv.remove();
     }
 
     // Initialize when DOM ready
