@@ -18,10 +18,17 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="dashboard.css">
+    <link rel="stylesheet" href="chatbot.css?v=1.1">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 </head>
 
 <body class="dashboard-body">
+    <!-- Disclaimer Banner -->
+    <div class="disclaimer-banner"
+        data-kk="⚠️ Тест нұсқасы. Бұл сайт әзірлеу сатысында және ресми сервис емес. Төлемдер мен қайырымдылық қабылданбайды."
+        data-ru="⚠️ Тестовая версия. Данный сайт находится в разработке и не является официальным сервисом. Приём платежей и пожертвований не осуществляется.">
+        ⚠️ Тест нұсқасы. Бұл сайт әзірлеу сатысында және ресми сервис емес. Төлемдер мен қайырымдылық қабылданбайды.
+    </div>
     <!-- Dashboard Header -->
     <header class="dash-header">
         <div class="dash-header-content">
@@ -173,7 +180,9 @@
         </a>
     </nav>
 
-    <script type="module" src="dashboard.js"></script>
+    <script type="module" src="dashboard.js?v=1.0"></script>
+    <script src="shared.js"></script>
+    <script src="chatbot.js?v=4.0"></script>
 </body>
 
 </html>
