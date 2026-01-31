@@ -3,7 +3,7 @@
    Free scripted bot with pre-programmed answers
    ======================================== */
 
-(function() {
+(function () {
     'use strict';
 
     // FAQ Database (Bilingual)
@@ -16,9 +16,15 @@
             }
         },
         whatIs1ge: {
-            patterns: ['что такое', '1ge', 'не деген', 'деген не', 'бұл не', 'что это', 'как работает', 'қалай жұмыс'],
+            patterns: [
+                'что такое', '1ge', '1=ge', 'не деген', 'деген не', 'дегеніміз', 'дегенiмiз',
+                'бұл не', 'бул не', 'что это', 'это что', 'как работает', 'қалай жұмыс',
+                'кандай сайт', 'қандай сайт', 'что за сайт', 'какой сайт', 'про сайт',
+                'не істейді', 'не истейди', 'что делает', 'для чего', 'не үшін', 'неге керек',
+                'сайт туралы', 'про проект', 'о проекте', 'жоба туралы', 'осы не', 'мынау не'
+            ],
             response: {
-                kk: '💚 1=GE — бұл қайырымдылық платформасы. Әр адам күніне 1 теңге береді, барлығы бірігіп нұсқаушыларға көмектеседі.',
+                kk: '💚 1=GE — бұл қайырымдылық платформасы. Әр адам күніне 1 теңге береді, барлығы бірігіп мұқтаж адамдарға көмектеседі.',
                 ru: '💚 1=GE — это платформа благотворительности. Каждый человек жертвует 1 тенге в день, и вместе мы помогаем нуждающимся.'
             }
         },
@@ -80,7 +86,7 @@
     // Find matching response
     function findResponse(message) {
         const lowerMsg = message.toLowerCase();
-        
+
         for (const key in faqData) {
             const faq = faqData[key];
             for (const pattern of faq.patterns) {
@@ -95,13 +101,13 @@
     // Create chatbot UI
     function createChatbotUI() {
         const lang = getLang();
-        
+
         // Chat toggle button
         const toggleBtn = document.createElement('button');
         toggleBtn.className = 'chatbot-toggle';
         toggleBtn.innerHTML = '💬';
         toggleBtn.setAttribute('aria-label', 'Открыть чат');
-        
+
         // Chat window
         const chatWindow = document.createElement('div');
         chatWindow.className = 'chatbot-window';
@@ -122,11 +128,11 @@
                 <button class="chatbot-send" id="chatbot-send">➤</button>
             </div>
         `;
-        
+
         // Add to page
         document.body.appendChild(toggleBtn);
         document.body.appendChild(chatWindow);
-        
+
         // Event listeners
         toggleBtn.addEventListener('click', () => {
             chatWindow.classList.toggle('open');
@@ -135,22 +141,22 @@
                 document.getElementById('chatbot-input').focus();
             }
         });
-        
+
         chatWindow.querySelector('.chatbot-close').addEventListener('click', () => {
             chatWindow.classList.remove('open');
             toggleBtn.classList.remove('hidden');
         });
-        
+
         const input = document.getElementById('chatbot-input');
         const sendBtn = document.getElementById('chatbot-send');
-        
+
         function sendMessage() {
             const msg = input.value.trim();
             if (!msg) return;
-            
+
             addMessage(msg, 'user');
             input.value = '';
-            
+
             // Simulate typing delay
             setTimeout(() => {
                 const response = findResponse(msg);
@@ -158,7 +164,7 @@
                 addMessage(response[lang] || response.ru, 'bot');
             }, 500 + Math.random() * 500);
         }
-        
+
         sendBtn.addEventListener('click', sendMessage);
         input.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') sendMessage();
