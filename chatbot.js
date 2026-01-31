@@ -54,17 +54,17 @@
             });
 
             if (!response.ok) {
-                throw new Error('API request failed');
+                const errorData = await response.json();
+                console.error('Gemini API Error details:', errorData);
+                throw new Error(errorData.error.message || `HTTP Error ${response.status}`);
             }
 
             const data = await response.json();
             return data.candidates[0].content.parts[0].text;
         } catch (error) {
-            console.error('Gemini API error:', error);
-            const lang = getLang();
-            return lang === 'kk'
-                ? '😔 Кешіріңіз, қазір жауап бере алмадым. Кейінірек қайталап көріңіз.'
-                : '😔 Извините, не смог ответить. Попробуйте позже.';
+            console.error('Chatbot Error:', error);
+            // Show exact error to user for debugging
+            return `⚠️ Ошибка: ${error.message}`;
         }
     }
 
