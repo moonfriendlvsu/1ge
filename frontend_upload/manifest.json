@@ -1,0 +1,29 @@
+{
+  "name": "1=GE — Бірге",
+  "short_name": "1=GE",
+  "description": "1 теңге. Күн сайын. Бірге — платформа взаимопомощи",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0a0a",
+  "theme_color": "#10B981",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "favicon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "favicon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["finance", "social"],
+  "lang": "kk",
+  "dir": "ltr",
+  "scope": "/",
+  "prefer_related_applications": false
+}

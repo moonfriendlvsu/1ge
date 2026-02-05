@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="kk">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Жеке кабинет — 1=GE</title>
+
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="apple-touch-icon" href="favicon.png">
+    <meta name="theme-color" content="#10B981">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="manifest" href="manifest.json">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="dashboard.css">
+    <link rel="stylesheet" href="chatbot.css?v=1.1">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+
+<body class="dashboard-body">
+    <!-- Disclaimer Banner -->
+    <div class="disclaimer-banner"
+        data-kk="⚠️ Тест нұсқасы. Бұл сайт әзірлеу сатысында және ресми сервис емес. Төлемдер мен қайырымдылық қабылданбайды."
+        data-ru="⚠️ Тестовая версия. Данный сайт находится в разработке и не является официальным сервисом. Приём платежей и пожертвований не осуществляется.">
+        ⚠️ Тест нұсқасы. Бұл сайт әзірлеу сатысында және ресми сервис емес. Төлемдер мен қайырымдылық қабылданбайды.
+    </div>
+    <!-- Dashboard Header -->
+    <header class="dash-header">
+        <div class="dash-header-content">
+            <a href="index.html" class="dash-logo">
+                <span class="logo-1">1</span><span class="logo-eq">=</span><span class="logo-ge">GE</span>
+            </a>
+
+            <div class="dash-user">
+                <button class="theme-toggle" id="theme-toggle" aria-label="Тема">🌙</button>
+                <div class="user-avatar">АҚ</div>
+                <div class="user-info">
+                    <span class="user-name">Асан Қасым</span>
+                    <span class="user-status" data-kk="Верификацияланған" data-ru="Верифицирован">✓
+                        Верификацияланған</span>
+                </div>
+                <button class="user-menu-btn" id="user-menu-btn">▼</button>
+            </div>
+        </div>
+
+        <!-- User Menu Dropdown -->
+        <div class="user-menu" id="user-menu">
+            <a href="#" data-kk="Профиль" data-ru="Профиль">👤 Профиль</a>
+            <a href="#" data-kk="Баптаулар" data-ru="Настройки">⚙️ Баптаулар</a>
+            <a href="#" data-kk="Көмек" data-ru="Помощь">❓ Көмек</a>
+            <hr>
+            <a href="index.html" class="logout" data-kk="Шығу" data-ru="Выйти">🚪 Шығу</a>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="dash-main">
+        <div class="dash-container">
+
+            <!-- Balance Card -->
+            <section class="balance-card">
+                <div class="balance-header">
+                    <span data-kk="Сіздің балансыңыз" data-ru="Ваш баланс">Сіздің балансыңыз</span>
+                    <span class="balance-month" data-kk="Қаңтар 2026" data-ru="Январь 2026">Қаңтар 2026</span>
+                </div>
+                <div class="balance-amount">
+                    <span class="balance-value">30 000</span>
+                    <span class="balance-currency">₸</span>
+                </div>
+                <div class="balance-limit">
+                    <div class="limit-bar">
+                        <div class="limit-fill" style="width: 100%"></div>
+                    </div>
+                    <div class="limit-text">
+                        <span data-kk="Қолжетімді" data-ru="Доступно">Қолжетімді</span>
+                        <span>30 000₸ / 30 000₸</span>
+                    </div>
+                </div>
+                <div class="balance-renewal">
+                    <span>🔄</span>
+                    <span data-kk="Келесі жаңарту: 1 ақпан" data-ru="Следующее обновление: 1 февраля">Келесі жаңарту: 1
+                        ақпан</span>
+                </div>
+            </section>
+
+            <!-- Expense Chart -->
+            <section class="expense-chart-section">
+                <div class="chart-header">
+                    <h2 class="section-title-sm" data-kk="Шығындар" data-ru="Расходы">Шығындар</h2>
+                    <div class="chart-period">
+                        <button class="period-btn active" data-period="week" data-kk="Апта"
+                            data-ru="Неделя">Апта</button>
+                        <button class="period-btn" data-period="month" data-kk="Ай" data-ru="Месяц">Ай</button>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="expense-chart"></canvas>
+                </div>
+                <div class="chart-legend" id="chart-legend"></div>
+            </section>
+
+            <!-- Quick Actions -->
+            <section class="quick-actions">
+                <h2 class="section-title-sm" data-kk="Төлем түрлері" data-ru="Виды оплаты">Төлем түрлері</h2>
+                <div class="actions-grid">
+                    <a href="pay-utilities.html" class="action-card">
+                        <div class="action-icon">🏠</div>
+                        <span class="action-title" data-kk="Коммуналдық" data-ru="Коммунальные">Коммуналдық</span>
+                        <span class="action-desc" data-kk="Жарық, газ, су" data-ru="Свет, газ, вода">Жарық, газ,
+                            су</span>
+                    </a>
+                    <a href="pay-groceries.html" class="action-card">
+                        <div class="action-icon">🛒</div>
+                        <span class="action-title" data-kk="Азық-түлік" data-ru="Продукты">Азық-түлік</span>
+                        <span class="action-desc" data-kk="Дүкендер" data-ru="Магазины">Дүкендер</span>
+                    </a>
+                    <a href="pay-pharmacy.html" class="action-card">
+                        <div class="action-icon">💊</div>
+                        <span class="action-title" data-kk="Дәріхана" data-ru="Аптека">Дәріхана</span>
+                        <span class="action-desc" data-kk="Дәрі-дәрмектер" data-ru="Лекарства">Дәрі-дәрмектер</span>
+                    </a>
+                    <a href="#" class="action-card action-disabled">
+                        <div class="action-icon">📱</div>
+                        <span class="action-title" data-kk="Байланыс" data-ru="Связь">Байланыс</span>
+                        <span class="action-desc" data-kk="Жақында" data-ru="Скоро">Жақында</span>
+                    </a>
+                </div>
+            </section>
+
+            <!-- Recent Transactions -->
+            <section class="transactions">
+                <div class="transactions-header">
+                    <h2 class="section-title-sm" data-kk="Соңғы транзакциялар" data-ru="Последние транзакции">Соңғы
+                        транзакциялар</h2>
+                    <a href="transactions.html" class="view-all" data-kk="Барлығын көру" data-ru="Смотреть все">Барлығын
+                        көру →</a>
+                </div>
+
+                <div class="transactions-list">
+                    <!-- Transactions will be loaded dynamically from localStorage -->
+                </div>
+            </section>
+
+            <!-- Help Banner -->
+            <section class="help-banner">
+                <div class="help-icon">💬</div>
+                <div class="help-content">
+                    <span class="help-title" data-kk="Көмек керек пе?" data-ru="Нужна помощь?">Көмек керек пе?</span>
+                    <span class="help-desc" data-kk="24/7 қолдау қызметі" data-ru="Поддержка 24/7">24/7 қолдау
+                        қызметі</span>
+                </div>
+                <a href="#" class="help-btn" data-kk="Хабарласу" data-ru="Связаться">Хабарласу</a>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <a href="dashboard.html" class="nav-item active">
+            <span class="nav-icon">🏠</span>
+            <span data-kk="Басты" data-ru="Главная">Басты</span>
+        </a>
+        <a href="pay-utilities.html" class="nav-item">
+            <span class="nav-icon">💳</span>
+            <span data-kk="Төлемдер" data-ru="Платежи">Төлемдер</span>
+        </a>
+        <a href="transactions.html" class="nav-item">
+            <span class="nav-icon">📊</span>
+            <span data-kk="Тарих" data-ru="История">Тарих</span>
+        </a>
+        <a href="profile.html" class="nav-item">
+            <span class="nav-icon">👤</span>
+            <span data-kk="Профиль" data-ru="Профиль">Профиль</span>
+        </a>
+    </nav>
+
+    <script type="module" src="dashboard.js?v=1.0"></script>
+    <script src="shared.js"></script>
+    <script src="chatbot.js?v=10.0"></script>
+</body>
+
+</html>

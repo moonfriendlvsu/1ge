@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="kk">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Коммуналдық төлемдер — 1=GE</title>
+
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="apple-touch-icon" href="favicon.png">
+    <meta name="theme-color" content="#10B981">
+    <link rel="manifest" href="manifest.json">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css?v=1.0">
+    <link rel="stylesheet" href="dashboard.css?v=1.0">
+    <link rel="stylesheet" href="payment.css?v=1.0">
+</head>
+
+<body class="dashboard-body">
+    <!-- Disclaimer Banner -->
+    <div class="disclaimer-banner" data-kk="⚠️ Тест нұсқасы. Төлемдер қабылданбайды."
+        data-ru="⚠️ Тестовая версия. Приём платежей не осуществляется.">
+        ⚠️ Тест нұсқасы. Төлемдер қабылданбайды.
+    </div>
+
+    <!-- Header -->
+    <header class="pay-header">
+        <a href="dashboard.html" class="back-btn">← Артқа</a>
+        <h1>🏠 Коммуналдық</h1>
+        <div class="balance-mini">30 000₸</div>
+    </header>
+
+    <!-- Main -->
+    <main class="pay-main">
+        <div class="pay-container">
+
+            <!-- Search -->
+            <div class="search-box">
+                <span class="search-icon">🔍</span>
+                <input type="text" placeholder="Қызмет іздеу..." id="service-search">
+            </div>
+
+            <!-- Service Categories -->
+            <div class="service-categories">
+                <button class="category-btn active" data-category="all">Барлығы</button>
+                <button class="category-btn" data-category="electricity">Жарық</button>
+                <button class="category-btn" data-category="gas">Газ</button>
+                <button class="category-btn" data-category="water">Су</button>
+                <button class="category-btn" data-category="heating">Жылу</button>
+            </div>
+
+            <!-- Service List -->
+            <div class="service-list" id="service-list">
+                <a href="#" class="service-item" data-category="electricity"
+                    onclick="showPaymentForm(event, 'Алматы Электр Желісі', '⚡')">
+                    <div class="service-icon">⚡</div>
+                    <div class="service-info">
+                        <span class="service-name">Алматы Электр Желісі</span>
+                        <span class="service-desc">АО "Алматы Энергия Сбыт"</span>
+                    </div>
+                    <span class="service-arrow">→</span>
+                </a>
+
+                <a href="#" class="service-item" data-category="electricity"
+                    onclick="showPaymentForm(event, 'AlmatyEnergoSbyt', '⚡')">
+                    <div class="service-icon">⚡</div>
+                    <div class="service-info">
+                        <span class="service-name">AlmatyEnergoSbyt</span>
+                        <span class="service-desc">Электр энергиясы</span>
+                    </div>
+                    <span class="service-arrow">→</span>
+                </a>
+
+                <a href="#" class="service-item" data-category="gas"
+                    onclick="showPaymentForm(event, 'ҚазТрансГаз', '🔥')">
+                    <div class="service-icon">🔥</div>
+                    <div class="service-info">
+                        <span class="service-name">ҚазТрансГаз</span>
+                        <span class="service-desc">Газ жабдықтау</span>
+                    </div>
+                    <span class="service-arrow">→</span>
+                </a>
+
+                <a href="#" class="service-item" data-category="gas"
+                    onclick="showPaymentForm(event, 'Алматығаз', '🔥')">
+                    <div class="service-icon">🔥</div>
+                    <div class="service-info">
+                        <span class="service-name">Алматығаз</span>
+                        <span class="service-desc">Газ жабдықтау</span>
+                    </div>
+                    <span class="service-arrow">→</span>
+                </a>
+
+                <a href="#" class="service-item" data-category="water"
+                    onclick="showPaymentForm(event, 'Алматы Су', '💧')">
+                    <div class="service-icon">💧</div>
+                    <div class="service-info">
+                        <span class="service-name">Алматы Су</span>
+                        <span class="service-desc">Су жабдықтау</span>
+                    </div>
+                    <span class="service-arrow">→</span>
+                </a>
+
+                <a href="#" class="service-item" data-category="heating"
+                    onclick="showPaymentForm(event, 'Алматы Жылу', '🌡️')">
+                    <div class="service-icon">🌡️</div>
+                    <div class="service-info">
+                        <span class="service-name">Алматы Жылу</span>
+                        <span class="service-desc">Жылу жабдықтау</span>
+                    </div>
+                    <span class="service-arrow">→</span>
+                </a>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Payment Modal -->
+    <div class="pay-modal" id="pay-modal">
+        <div class="pay-modal-content">
+            <button class="pay-modal-close" onclick="closePaymentModal()">×</button>
+
+            <div class="pay-modal-header">
+                <div class="pay-modal-icon" id="modal-icon">⚡</div>
+                <h2 id="modal-service-name">Service Name</h2>
+            </div>
+
+            <form class="pay-form" id="pay-form" onsubmit="processPayment(event)">
+                <div class="pay-form-group">
+                    <label>Жеке шот нөмірі</label>
+                    <input type="text" id="account-number" placeholder="XXXXXXXXXX" required>
+                </div>
+
+                <div class="pay-form-group">
+                    <label>Төлем сомасы</label>
+                    <div class="amount-input-wrap">
+                        <input type="number" id="pay-amount" placeholder="0" required min="1" max="30000">
+                        <span class="amount-currency">₸</span>
+                    </div>
+                    <span class="amount-hint">Қолжетімді: 30 000₸</span>
+                </div>
+
+                <div class="pay-summary">
+                    <div class="summary-row">
+                        <span>Қызмет</span>
+                        <span id="summary-service">-</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Сома</span>
+                        <span id="summary-amount">0₸</span>
+                    </div>
+                    <div class="summary-row total">
+                        <span>Жалпы</span>
+                        <span id="summary-total">0₸</span>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-full btn-large">
+                    <span>💳 Төлеу</span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Receipt Modal -->
+    <div class="receipt-modal" id="success-modal">
+        <div class="receipt-content">
+            <div class="receipt-header">
+                <div class="receipt-logo">
+                    <span class="logo-1">1</span><span class="logo-eq">=</span><span class="logo-ge">GE</span>
+                </div>
+                <div class="receipt-check">✓</div>
+            </div>
+
+            <h2 class="receipt-title" data-kk="Төлем сәтті!" data-ru="Оплата успешна!">Төлем сәтті!</h2>
+            <p class="receipt-subtitle" data-kk="Транзакция аяқталды" data-ru="Транзакция завершена">Транзакция аяқталды
+            </p>
+
+            <div class="receipt-details">
+                <div class="receipt-row">
+                    <span data-kk="Қызмет" data-ru="Услуга">Қызмет</span>
+                    <span id="receipt-service">-</span>
+                </div>
+                <div class="receipt-row">
+                    <span data-kk="Шот нөмірі" data-ru="Номер счета">Шот нөмірі</span>
+                    <span id="receipt-account">-</span>
+                </div>
+                <div class="receipt-row">
+                    <span data-kk="Күні" data-ru="Дата">Күні</span>
+                    <span id="receipt-date">-</span>
+                </div>
+                <div class="receipt-row total">
+                    <span data-kk="Сома" data-ru="Сумма">Сома</span>
+                    <span id="receipt-amount">-</span>
+                </div>
+            </div>
+
+            <div class="receipt-id">
+                <span data-kk="Транзакция ID:" data-ru="ID транзакции:">Транзакция ID:</span>
+                <span id="receipt-tx-id">-</span>
+            </div>
+
+            <div class="receipt-actions">
+                <a href="dashboard.html" class="btn btn-primary btn-full" data-kk="Жеке кабинетке оралу"
+                    data-ru="Вернуться в кабинет">Жеке кабинетке оралу</a>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="payment.js?v=1.0"></script>
+    <script src="shared.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="kk">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Профиль — 1=GE</title>
+
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="apple-touch-icon" href="favicon.png">
+    <meta name="theme-color" content="#10B981">
+    <link rel="manifest" href="manifest.json">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css?v=1.3">
+    <link rel="stylesheet" href="dashboard.css?v=1.3">
+    <link rel="stylesheet" href="profile.css?v=1.3">
+</head>
+
+<body class="dashboard-body">
+    <!-- Disclaimer Banner -->
+    <div class="disclaimer-banner" data-kk="⚠️ Тест нұсқасы. Төлемдер қабылданбайды."
+        data-ru="⚠️ Тестовая версия. Приём платежей не осуществляется.">
+        ⚠️ Тест нұсқасы. Төлемдер қабылданбайды.
+    </div>
+
+    <!-- Header -->
+    <header class="profile-header">
+        <a href="dashboard.html" class="back-btn">← Артқа</a>
+        <h1 data-kk="Профиль" data-ru="Профиль">Профиль</h1>
+        <div class="lang-toggle">
+            <button class="lang-btn" data-lang="kk">KZ</button>
+            <button class="lang-btn" data-lang="ru">RU</button>
+        </div>
+    </header>
+
+    <!-- Main -->
+    <main class="profile-main">
+        <div class="profile-container">
+
+            <!-- Avatar Section -->
+            <section class="profile-avatar-section">
+                <div class="profile-avatar skeleton skeleton-circle" id="profile-avatar"></div>
+                <h2 class="profile-name skeleton skeleton-text" id="profile-name" style="width: 150px; height: 1.2em;">
+                </h2>
+                <div class="profile-badge">
+                    <span class="badge-icon">✓</span>
+                    <span data-kk="Верификацияланған" data-ru="Верифицирован">Верификацияланған</span>
+                </div>
+                <button class="edit-profile-btn" id="edit-profile-btn">
+                    <span>✏️</span>
+                    <span data-kk="Өзгерту" data-ru="Изменить">Өзгерту</span>
+                </button>
+            </section>
+
+            <!-- Edit Profile Modal -->
+            <div class="modal edit-modal" id="edit-modal">
+                <div class="modal-content">
+                    <button class="modal-close" id="edit-modal-close">&times;</button>
+                    <div class="modal-icon">✏️</div>
+                    <h3 class="modal-title" data-kk="Профильді өзгерту" data-ru="Редактировать профиль">Профильді
+                        өзгерту</h3>
+
+                    <form id="edit-form" class="edit-form">
+                        <div class="form-group">
+                            <label for="edit-name" data-kk="Аты-жөніңіз" data-ru="Ваше имя">Аты-жөніңіз</label>
+                            <input type="text" id="edit-name" placeholder="Асан Қасым" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="edit-email" data-kk="Email" data-ru="Email">Email</label>
+                            <input type="email" id="edit-email" disabled>
+                            <span class="input-hint" data-kk="Email өзгертуге болмайды"
+                                data-ru="Email нельзя изменить">Email өзгертуге болмайды</span>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-full">
+                            <span data-kk="Сақтау" data-ru="Сохранить">Сақтау</span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Change Password Modal -->
+            <div class="modal password-modal" id="password-modal">
+                <div class="modal-content">
+                    <button class="modal-close" id="password-modal-close">&times;</button>
+                    <div class="modal-icon">🔐</div>
+                    <h3 class="modal-title" data-kk="Құпия сөзді өзгерту" data-ru="Изменить пароль">Құпия сөзді өзгерту
+                    </h3>
+
+                    <form id="password-form" class="edit-form">
+                        <div class="form-group">
+                            <label for="new-password" data-kk="Жаңа құпия сөз" data-ru="Новый пароль">Жаңа құпия
+                                сөз</label>
+                            <input type="password" id="new-password" placeholder="••••••••" minlength="6" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="confirm-password" data-kk="Растау" data-ru="Подтвердить">Растау</label>
+                            <input type="password" id="confirm-password" placeholder="••••••••" required>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-full">
+                            <span data-kk="Өзгерту" data-ru="Изменить">Өзгерту</span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- QR Code Section -->
+            <section class="qr-section">
+                <h3 class="section-title-sm" data-kk="Менің QR-кодым" data-ru="Мой QR-код">Менің QR-кодым</h3>
+                <div class="qr-card" id="qr-card">
+                    <div class="qr-code" id="qr-code"></div>
+                    <p class="qr-text" data-kk="Төлем алу үшін сканерлеңіз" data-ru="Сканируйте для оплаты">Төлем алу
+                        үшін сканерлеңіз</p>
+                    <button class="qr-share-btn" id="qr-share-btn">
+                        <span>📤</span>
+                        <span data-kk="Бөлісу" data-ru="Поделиться">Бөлісу</span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- User Info -->
+            <section class="profile-info">
+                <h3 class="section-title-sm" data-kk="Жеке мәліметтер" data-ru="Личные данные">Жеке мәліметтер</h3>
+
+                <div class="info-card">
+                    <div class="info-row">
+                        <span class="info-icon">👤</span>
+                        <div class="info-content">
+                            <span class="info-label" data-kk="Аты-жөні" data-ru="ФИО">Аты-жөні</span>
+                            <span class="info-value skeleton skeleton-text" id="info-name" style="width: 120px;"></span>
+                        </div>
+                    </div>
+
+                    <div class="info-row">
+                        <span class="info-icon">📱</span>
+                        <div class="info-content">
+                            <span class="info-label" data-kk="Телефон" data-ru="Телефон">Телефон</span>
+                            <span class="info-value skeleton skeleton-text" id="info-phone"
+                                style="width: 140px;"></span>
+                        </div>
+                    </div>
+
+                    <div class="info-row">
+                        <span class="info-icon">🆔</span>
+                        <div class="info-content">
+                            <span class="info-label" data-kk="ЖСН" data-ru="ИИН">ЖСН</span>
+                            <span class="info-value" id="info-iin">XXXX XXXX XXXX</span>
+                        </div>
+                    </div>
+
+                    <div class="info-row">
+                        <span class="info-icon">📅</span>
+                        <div class="info-content">
+                            <span class="info-label" data-kk="Тіркелген күні" data-ru="Дата регистрации">Тіркелген
+                                күні</span>
+                            <span class="info-value" id="info-date">-</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Stats -->
+            <section class="profile-stats">
+                <h3 class="section-title-sm" data-kk="Статистика" data-ru="Статистика">Статистика</h3>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-value" id="stat-transactions">0</span>
+                        <span class="stat-label" data-kk="Транзакциялар" data-ru="Транзакции">Транзакциялар</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-value" id="stat-spent">0₸</span>
+                        <span class="stat-label" data-kk="Жұмсалды" data-ru="Потрачено">Жұмсалды</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-value" id="stat-refills">0₸</span>
+                        <span class="stat-label" data-kk="Толтырылды" data-ru="Пополнено">Толтырылды</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-value" id="stat-balance">0₸</span>
+                        <span class="stat-label" data-kk="Баланс" data-ru="Баланс">Баланс</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Settings -->
+            <section class="profile-settings">
+                <h3 class="section-title-sm" data-kk="Баптаулар" data-ru="Настройки">Баптаулар</h3>
+
+                <div class="settings-list">
+                    <a href="#" class="settings-item">
+                        <span class="settings-icon">🔔</span>
+                        <span data-kk="Хабарландырулар" data-ru="Уведомления">Хабарландырулар</span>
+                        <span class="settings-arrow">→</span>
+                    </a>
+                    <a href="#" class="settings-item" id="change-password-link">
+                        <span class="settings-icon">🔐</span>
+                        <span data-kk="Құпия сөзді өзгерту" data-ru="Изменить пароль">Құпия сөзді өзгерту</span>
+                        <span class="settings-arrow">→</span>
+                    </a>
+                    <a href="faq.html" class="settings-item">
+                        <span class="settings-icon">❓</span>
+                        <span data-kk="Көмек" data-ru="Помощь">Көмек</span>
+                        <span class="settings-arrow">→</span>
+                    </a>
+                    <a href="#" class="settings-item">
+                        <span class="settings-icon">📄</span>
+                        <span data-kk="Қолдану шарттары" data-ru="Условия использования">Қолдану шарттары</span>
+                        <span class="settings-arrow">→</span>
+                    </a>
+                </div>
+            </section>
+
+            <!-- Logout -->
+            <button class="logout-btn" id="logout-btn">
+                <span>🚪</span>
+                <span data-kk="Шығу" data-ru="Выйти">Шығу</span>
+            </button>
+
+            <p class="app-version">1=GE v1.0.0</p>
+
+        </div>
+    </main>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <a href="dashboard.html" class="nav-item">
+            <span class="nav-icon">🏠</span>
+            <span data-kk="Басты" data-ru="Главная">Басты</span>
+        </a>
+        <a href="pay-utilities.html" class="nav-item">
+            <span class="nav-icon">💳</span>
+            <span data-kk="Төлемдер" data-ru="Платежи">Төлемдер</span>
+        </a>
+        <a href="transactions.html" class="nav-item">
+            <span class="nav-icon">📊</span>
+            <span data-kk="Тарих" data-ru="История">Тарих</span>
+        </a>
+        <a href="profile.html" class="nav-item active">
+            <span class="nav-icon">👤</span>
+            <span data-kk="Профиль" data-ru="Профиль">Профиль</span>
+        </a>
+    </nav>
+
+    <script type="module" src="profile.js?v=1.0"></script>
+    <script src="shared.js"></script>
+</body>
+
+</html>
