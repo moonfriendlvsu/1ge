@@ -1,6 +1,8 @@
 const express = require('express');
 const axios = require('axios');
 const cors = require('cors');
+require('dotenv').config();
+
 // Добавляем поддержку переменных окружения
 require('dotenv').config();
 
