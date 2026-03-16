@@ -1,18 +1,18 @@
 // Firebase Configuration for 1=GE
-// Project: ge-company
+// Replace these values with your own Firebase project configuration
 
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail, updatePassword } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
-import { getFirestore, doc, setDoc, getDoc, collection, addDoc, query, where, orderBy, limit, getDocs, updateDoc, serverTimestamp, Timestamp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+import { getAuth, /* ... остальные импорты ... */ } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+import { getFirestore, /* ... остальные импорты ... */ } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 
 const firebaseConfig = {
-    apiKey: "AIzaSyDKmaJATjfIDfV7VJiISLb6qHp0y3Km4iw",
-    authDomain: "ge-company.firebaseapp.com",
-    projectId: "ge-company",
-    storageBucket: "ge-company.firebasestorage.app",
-    messagingSenderId: "845786400154",
-    appId: "1:845786400154:web:c170eda08b86a9876e2623",
-    measurementId: "G-XFP26ZDCJH"
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+    projectId: "YOUR_PROJECT_ID",
+    storageBucket: "YOUR_PROJECT_ID.firebasestorage.app",
+    messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+    appId: "YOUR_APP_ID",
+    measurementId: "YOUR_MEASUREMENT_ID"
 };
 
 // Initialize Firebase
@@ -20,31 +20,4 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-// Export for use in other modules
-export {
-    app,
-    auth,
-    db,
-    // Auth functions
-    createUserWithEmailAndPassword,
-    signInWithEmailAndPassword,
-    signOut,
-    onAuthStateChanged,
-    sendPasswordResetEmail,
-    updatePassword,
-    // Firestore functions
-    doc,
-    setDoc,
-    getDoc,
-    collection,
-    addDoc,
-    query,
-    where,
-    orderBy,
-    limit,
-    getDocs,
-    updateDoc,
-    serverTimestamp,
-    Timestamp
-};
-
+export { app, auth, db, /* ... экспорты ... */ };
